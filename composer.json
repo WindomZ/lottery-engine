@@ -29,9 +29,13 @@
         "psr-4": {"LotteryEngine\\Test\\": "tests"}
     },
     "scripts": {
-        "test": [
+        "testing": [
             "parallel-lint . --exclude vendor",
             "phpunit"
+        ],
+        "test": [
+            "parallel-lint . --exclude vendor",
+            "phpunit ./tests/Util"
         ]
     }
 }
