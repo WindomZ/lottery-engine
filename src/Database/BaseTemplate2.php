@@ -5,29 +5,17 @@ namespace LotteryEngine\Database;
 use LotteryEngine\Exception\ErrorException;
 
 /**
- * Class BaseTemplate1
+ * Class BaseTemplate2
  * @package LotteryEngine\Database
  */
-abstract class BaseTemplate1 extends BaseId
+abstract class BaseTemplate2 extends BaseTemplate1
 {
-    const COL_NAME = 'name';
-    const COL_ACTIVE = 'active';
-    const COL_LEVEL = 'level';
+    const COL_DESC = 'desc';
 
     /**
      * @var string
      */
-    public $name;
-
-    /**
-     * @var bool
-     */
-    public $active = true;
-
-    /**
-     * @var int
-     */
-    public $level = 0;
+    public $desc = '';
 
     /**
      * @return array
@@ -37,9 +25,7 @@ abstract class BaseTemplate1 extends BaseId
         return array_merge(
             parent::toArray(),
             [
-                self::COL_NAME => $this->name,
-                self::COL_ACTIVE => $this->active,
-                self::COL_LEVEL => $this->level,
+                self::COL_DESC => $this->desc,
             ]
         );
     }
@@ -52,9 +38,7 @@ abstract class BaseTemplate1 extends BaseId
     {
         parent::toInstance($data);
 
-        $this->name = $data[self::COL_NAME];
-        $this->active = $data[self::COL_ACTIVE];
-        $this->level = $data[self::COL_LEVEL];
+        $this->desc = $data[self::COL_DESC];
 
         return $this;
     }
@@ -65,10 +49,6 @@ abstract class BaseTemplate1 extends BaseId
     protected function beforePost()
     {
         parent::beforePost();
-
-        if (empty($this->name)) {
-            throw new ErrorException('"name" should not be empty!"');
-        }
     }
 
     /**
@@ -77,9 +57,5 @@ abstract class BaseTemplate1 extends BaseId
     protected function beforePut()
     {
         parent::beforePut();
-
-        if (empty($this->name)) {
-            throw new ErrorException('"name" should not be empty!"');
-        }
     }
 }

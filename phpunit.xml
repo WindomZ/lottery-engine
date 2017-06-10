@@ -3,5 +3,8 @@
         <testsuite name="init">
             <file>tests/LotteryTest.php</file>
         </testsuite>
+        <testsuite name="util">
+            <directory>tests/Util</directory>
+        </testsuite>
     </testsuites>
 </phpunit>

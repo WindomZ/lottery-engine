@@ -84,9 +84,31 @@ abstract class BaseId extends Base
 
     /**
      * @param array|string $columns
-     * @return bool
+     * @return array
      */
-    public function put($columns = []): bool
+    protected function columns2data($columns): array
+    {
+        if (empty($columns)) {
+            return [];
+        }
+
+        $data = $this->toArray();
+
+        if ($columns !== '*') {
+            $columns = array_diff($columns, [self::COL_ID]);
+            $data = array_intersect_key($data, array_flip($columns));
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array|string $columns
+     * @param array|null $where
+     * @return bool
+     * @throws ErrorException
+     */
+    public function put($columns, array $where = null): bool
     {
         if ($columns !== '*') {
             $columns = array_diff($columns, [self::COL_ID]);
@@ -96,6 +118,6 @@ abstract class BaseId extends Base
 
         $this->put_time = 'NOW()';
 
-        return parent::put($columns);
+        return parent::put($columns, $where);
     }
 }
