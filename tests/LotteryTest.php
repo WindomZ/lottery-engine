@@ -17,8 +17,31 @@ class LotteryTest extends TestCase
      */
     public function testLottery()
     {
+        Lottery::setConfigPath('./tests/Config/config.yml');
         $lottery = Lottery::getInstance();
+
         $this->assertNotEmpty($lottery);
+
+        return $lottery;
+    }
+
+    /**
+     * @depends testLottery
+     * @param Lottery $lottery
+     * @return Lottery
+     */
+    public function testLotteryConfig(Lottery $lottery)
+    {
+        $this->assertNotEmpty($lottery);
+
+        self::assertEquals($lottery->getConfig()->get('database_host'), '127.0.0.1');
+        self::assertEquals($lottery->getConfig()->get('database_port'), 3306);
+        self::assertEquals($lottery->getConfig()->get('database_type'), 'mysql');
+        self::assertEquals($lottery->getConfig()->get('database_name'), 'lotterydb');
+        self::assertEquals($lottery->getConfig()->get('database_username'), 'root');
+        self::assertEquals($lottery->getConfig()->get('database_password'), 'root');
+        self::assertEquals($lottery->getConfig()->get('database_logging'), true);
+        self::assertEquals($lottery->getConfig()->get('database_prefix'), 'le_');
 
         return $lottery;
     }
