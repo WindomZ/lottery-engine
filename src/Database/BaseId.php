@@ -30,6 +30,31 @@ abstract class BaseId extends Base
     public $put_time;
 
     /**
+     * @return array
+     */
+    protected function toArray(): array
+    {
+        return [
+            self::COL_ID => $this->id,
+            self::COL_POST_TIME => $this->post_time,
+            self::COL_PUT_TIME => $this->put_time,
+        ];
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+    protected function toInstance(array $data)
+    {
+        $this->id = $data[self::COL_ID];
+        $this->post_time = $data[self::COL_POST_TIME];
+        $this->put_time = $data[self::COL_PUT_TIME];
+
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function post(): bool
