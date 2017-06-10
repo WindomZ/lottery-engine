@@ -3,6 +3,7 @@
 namespace LotteryEngine;
 
 use LotteryEngine\Config\Config;
+use LotteryEngine\Database\Database;
 
 /**
  * Class Lottery
@@ -31,20 +32,26 @@ class Lottery
         return self::$_instance;
     }
 
+    /**
+     * @var Config
+     */
     protected $config;
 
     /**
-     * @return mixed
+     * @return Config
      */
     public function getConfig()
     {
         return $this->config;
     }
 
+    /**
+     * @var Database
+     */
     protected $database;
 
     /**
-     * @return mixed
+     * @return Database
      */
     public function getDatabase()
     {
@@ -70,6 +77,7 @@ class Lottery
     private function __construct()
     {
         $this->config = new Config(self::$configPath);
+        $this->database = new Database($this->config);
         self::$_instance = $this;
     }
 }
