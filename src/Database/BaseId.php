@@ -2,6 +2,7 @@
 
 namespace LotteryEngine\Database;
 
+use LotteryEngine\Exception\ErrorException;
 use LotteryEngine\Util\Uuid;
 
 /**
@@ -55,6 +56,13 @@ abstract class BaseId extends Base
     }
 
     /**
+     * @throws ErrorException
+     */
+    protected function beforePost()
+    {
+    }
+
+    /**
      * @return bool
      */
     public function post(): bool
@@ -67,11 +75,11 @@ abstract class BaseId extends Base
     }
 
     /**
-     * @return bool
+     * @throws ErrorException
      */
     protected function beforePut()
     {
-        return Uuid::isValid($this->id);
+        Uuid::isValid($this->id);
     }
 
     /**
