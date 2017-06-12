@@ -17,4 +17,37 @@ class Reward extends DbReward
     {
         parent::__construct();
     }
+
+    /**
+     * @return Reward
+     */
+    protected function newObject()
+    {
+        return new Reward();
+    }
+
+    /**
+     * @param string|null $id
+     * @return Reward|null
+     */
+    public static function object(string $id = null)
+    {
+        $obj = new Reward();
+        if ($id && !$obj->getById($id)) {
+            return null;
+        }
+
+        return $obj;
+    }
+
+    /**
+     * @param array|null $where
+     * @param int $limit
+     * @param int $page
+     * @return array|null
+     */
+    public static function list(array $where = null, int $limit = 0, int $page = 0)
+    {
+        return (new Reward())->select($where, $limit, $page);
+    }
 }
