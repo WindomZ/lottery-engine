@@ -3,6 +3,7 @@
 namespace LotteryEngine\Database;
 
 use LotteryEngine\Exception\ErrorException;
+use LotteryEngine\Util\Date;
 use LotteryEngine\Util\Uuid;
 
 /**
@@ -68,8 +69,8 @@ abstract class BaseId extends Base
     public function post(): bool
     {
         $this->id = Uuid::uuid();
-        $this->post_time = 'NOW()';
-        $this->put_time = 'NOW()';
+        $this->post_time = Date::get_now_time();
+        $this->put_time = Date::get_now_time();
 
         return parent::post();
     }
@@ -116,7 +117,7 @@ abstract class BaseId extends Base
             array_push($columns, self::COL_PUT_TIME);
         }
 
-        $this->put_time = 'NOW()';
+        $this->put_time = Date::get_now_time();
 
         return parent::put($columns, $where);
     }

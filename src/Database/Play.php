@@ -68,7 +68,7 @@ class Play extends BaseTemplate2
                 self::COL_LIMIT => $this->limit,
                 self::COL_SIZE => $this->size,
                 self::COL_COUNT => $this->count,
-                self::COL_WEIGHTS => $this->weights,
+                self::COL_WEIGHTS => json_encode($this->weights),
             ]
         );
     }
@@ -86,7 +86,7 @@ class Play extends BaseTemplate2
         $this->limit = $data[self::COL_LIMIT];
         $this->size = $data[self::COL_SIZE];
         $this->count = $data[self::COL_COUNT];
-        $this->weights = $data[self::COL_WEIGHTS];
+        $this->weights = json_decode($data[self::COL_WEIGHTS], true);
 
         return $this;
     }
