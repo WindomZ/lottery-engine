@@ -53,14 +53,33 @@ class Date
 
     /**
      * @param string $time
-     * @return bool
+     * @return bool|DateTime
      * @throws ErrorException
      */
-    public static function before(string $time)
+    public static function getDate(string $time)
     {
         $date = DateTime::createFromFormat(self::DATE_FORMAT, $time);
         if (!$date) {
-            throw new ErrorException('Invalid time format!');
+            throw new ErrorException('Invalid time format string!');
+        }
+
+        return $date;
+    }
+
+    /**
+     * @param string $time
+     * @param string|null $refer
+     * @return bool
+     * @throws ErrorException
+     */
+    public static function before(string $time, string $refer = null)
+    {
+        $date = self::getDate($time);
+
+        if ($refer) {
+            $dateRefer = self::getDate($refer);
+
+            return $dateRefer->getTimestamp() > $date->getTimestamp();
         }
 
         return time() > $date->getTimestamp();
@@ -68,14 +87,18 @@ class Date
 
     /**
      * @param string $time
+     * @param string|null $refer
      * @return bool
      * @throws ErrorException
      */
-    public static function after(string $time)
+    public static function after(string $time, string $refer = null)
     {
-        $date = DateTime::createFromFormat(self::DATE_FORMAT, $time);
-        if (!$date) {
-            throw new ErrorException('Invalid time format!');
+        $date = self::getDate($time);
+
+        if ($refer) {
+            $dateRefer = self::getDate($refer);
+
+            return $dateRefer->getTimestamp() < $date->getTimestamp();
         }
 
         return time() < $date->getTimestamp();

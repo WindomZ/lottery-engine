@@ -34,6 +34,7 @@ class DateTest extends TestCase
     public function test_before()
     {
         $this->assertTrue(Date::before(Date::get_next_time(-1)));
+        $this->assertTrue(Date::before(Date::get_next_time(-1), Date::get_next_time()));
     }
 
     /**
@@ -42,5 +43,6 @@ class DateTest extends TestCase
     public function test_after()
     {
         $this->assertTrue(Date::after(Date::get_next_time(1)));
+        $this->assertTrue(Date::after(Date::get_next_time(1), Date::get_next_time()));
     }
 }
