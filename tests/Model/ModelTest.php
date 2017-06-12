@@ -15,38 +15,17 @@ use PHPUnit\Framework\TestCase;
 class ModelTest extends TestCase
 {
     /**
-     * @return Play
-     */
-    public function testNewPlay()
-    {
-        $play = new Play();
-        $this->assertNotEmpty($play);
-
-        return $play;
-    }
-
-    /**
-     * @return Reward
-     */
-    public function testNewReward()
-    {
-        $reward = new Reward();
-        $this->assertNotEmpty($reward);
-
-        return $reward;
-    }
-
-    /**
      * @covers  Reward::post()
-     * @depends testNewReward
-     * @param Reward $reward
      * @return Reward
      */
-    public function testPostReward(Reward $reward)
+    public function testPostReward()
     {
-        $this->assertNotEmpty($reward);
+        $reward = null;
 
-        if (!$reward->get([$reward::COL_NAME => 'name'])) {
+        $list = Reward::list([Reward::COL_NAME => 'name'], 10, 0);
+        if (!$list || !$list[Reward::ARG_SIZE]) {
+            $reward = new Reward();
+
             $reward->award_id = Uuid::uuid();
             $reward->level = 1;
 
@@ -58,9 +37,14 @@ class ModelTest extends TestCase
 
             $reward->name = 'name';
             $reward->desc = 'desc';
+            $reward->size = 10000;
 
             $this->assertTrue($reward->post());
+        } else {
+            $reward = $list[Reward::ARG_DATA][0];
         }
+
+        self::assertNotEmpty($reward);
 
         return $reward;
     }
@@ -68,30 +52,32 @@ class ModelTest extends TestCase
     /**
      * @covers  Reward::put()
      * @depends testPostReward
-     * @param Reward $play
+     * @param Reward $reward
      * @return Reward
      */
-    public function testPutReward(Reward $play)
+    public function testPutReward(Reward $reward)
     {
-        $this->assertTrue($play->put('*'));
+        $this->assertTrue($reward->put('*'));
 
-        return $play;
+        return $reward;
     }
 
     /**
      * @covers  Play::post()
-     * @depends testNewPlay
      * @depends testPutReward
-     * @param Play $play
      * @param Reward $reward
      * @return Play
      */
-    public function testPostPlay(Play $play, Reward $reward)
+    public function testPostPlay(Reward $reward)
     {
-        $this->assertNotEmpty($play);
         $this->assertNotEmpty($reward);
 
-        if (!$play->get([$play::COL_NAME => 'name'])) {
+        $play = null;
+
+        $list = Play::list([Play::COL_NAME => 'name'], 10, 0);
+        if (!$list || !$list[Play::ARG_SIZE]) {
+            $play = new Play();
+
             $play->name = 'name';
             $play->desc = 'desc';
             $play->rule = 'rule';
@@ -108,7 +94,11 @@ class ModelTest extends TestCase
             $play->addReward($reward->id, 10);
 
             $this->assertTrue($play->post());
+        } else {
+            $play = $list[Play::ARG_DATA][0];
         }
+
+        self::assertNotEmpty($play);
 
         return $play;
     }
@@ -133,5 +123,7 @@ class ModelTest extends TestCase
     public function testPlay(Play $play)
     {
         $this->assertNotEmpty($play);
+
+        $this->assertTrue($play->play($play->id));
     }
 }
