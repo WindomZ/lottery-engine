@@ -37,6 +37,14 @@ class Record extends BaseId
     public $winning = false;
 
     /**
+     * @return Record
+     */
+    protected function newObject()
+    {
+        return new Record();
+    }
+
+    /**
      * @return string
      */
     protected function getTableName(): string
@@ -74,6 +82,18 @@ class Record extends BaseId
         $this->winning = $data[self::COL_WINNING];
 
         return $this;
+    }
+
+    /**
+     * @param $data
+     * @return object
+     */
+    protected function addInstance($data)
+    {
+        $obj = $this->newObject()->toInstance($data);
+        $this->addList($obj);
+
+        return $obj;
     }
 
     /**

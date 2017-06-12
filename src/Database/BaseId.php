@@ -10,7 +10,7 @@ use LotteryEngine\Util\Uuid;
  * Class BaseId
  * @package LotteryEngine\Database
  */
-abstract class BaseId extends Base
+abstract class BaseId extends BaseList
 {
     const COL_ID = 'id';
     const COL_POST_TIME = 'post_time';
@@ -120,5 +120,26 @@ abstract class BaseId extends Base
         $this->put_time = Date::get_now_time();
 
         return parent::put($columns, $where);
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    protected function getById(string $id): bool
+    {
+        if (Uuid::isValid($id)) {
+            return parent::get([self::COL_ID => $id]);
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function refresh(): bool
+    {
+        return $this->getById($this->id);
     }
 }

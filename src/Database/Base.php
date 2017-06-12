@@ -19,6 +19,11 @@ abstract class Base
     }
 
     /**
+     * @return mixed
+     */
+    abstract protected function newObject();
+
+    /**
      * @return Database
      */
     protected function DB()
@@ -101,7 +106,7 @@ abstract class Base
      * @param array|null $where
      * @return bool
      */
-    public function get(array $where = null): bool
+    protected function get(array $where = null): bool
     {
         $data = $this->DB()->get($this->getTableName(), '*', $where);
         if (!$data) {
@@ -115,7 +120,7 @@ abstract class Base
      * @param array|null $where
      * @return int
      */
-    public function count(array $where = null): int
+    protected function count(array $where = null): int
     {
         $count = $this->DB()->count($this->getTableName(), $where);
         if (!$count) {
@@ -132,7 +137,7 @@ abstract class Base
      * @param array $data
      * @return bool
      */
-    public function increase(string $column, int $count, array $where, array $data = []): bool
+    protected function increase(string $column, int $count, array $where, array $data = []): bool
     {
         if (empty($column) || empty($count)) {
             return false;

@@ -30,6 +30,14 @@ class Reward extends BaseTemplate2
     public $count = 0;
 
     /**
+     * @return Reward
+     */
+    protected function newObject()
+    {
+        return new Reward();
+    }
+
+    /**
      * @return string
      */
     protected function getTableName(): string
@@ -68,6 +76,18 @@ class Reward extends BaseTemplate2
     }
 
     /**
+     * @param $data
+     * @return object
+     */
+    protected function addInstance($data)
+    {
+        $obj = $this->newObject()->toInstance($data);
+        $this->addList($obj);
+
+        return $obj;
+    }
+
+    /**
      * @throws ErrorException
      */
     protected function beforePost()
@@ -82,5 +102,13 @@ class Reward extends BaseTemplate2
     {
         $this->beforePost();
         parent::beforePut();
+    }
+
+    /**
+     * @return bool
+     */
+    public function pass(): bool
+    {
+        return $this->active && $this->count < $this->size;
     }
 }

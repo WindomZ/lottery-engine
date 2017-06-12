@@ -48,6 +48,14 @@ class Play extends BaseTemplate2
     public $weights = array();
 
     /**
+     * @return Play
+     */
+    protected function newObject()
+    {
+        return new Play();
+    }
+
+    /**
      * @return string
      */
     protected function getTableName(): string
@@ -92,6 +100,18 @@ class Play extends BaseTemplate2
     }
 
     /**
+     * @param $data
+     * @return object
+     */
+    protected function addInstance($data)
+    {
+        $obj = $this->newObject()->toInstance($data);
+        $this->addList($obj);
+
+        return $obj;
+    }
+
+    /**
      * @throws ErrorException
      */
     protected function beforePost()
@@ -119,5 +139,13 @@ class Play extends BaseTemplate2
     {
         $this->beforePost();
         parent::beforePut();
+    }
+
+    /**
+     * @return bool
+     */
+    public function pass(): bool
+    {
+        return $this->active && $this->count < $this->size;
     }
 }
