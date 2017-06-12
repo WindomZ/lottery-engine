@@ -2,8 +2,10 @@
 
 namespace LotteryEngine\Test\Model;
 
+use LotteryEngine\Exception\ErrorException;
 use LotteryEngine\Model\Play;
 use LotteryEngine\Model\Reward;
+use LotteryEngine\Util\Uuid;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,23 +26,84 @@ class ModelTest extends TestCase
     }
 
     /**
+     * @return Reward
+     */
+    public function testNewReward()
+    {
+        $reward = new Reward();
+        $this->assertNotEmpty($reward);
+
+        return $reward;
+    }
+
+    /**
+     * @covers  Reward::post()
+     * @depends testNewReward
+     * @param Reward $reward
+     * @return Reward
+     */
+    public function testPostReward(Reward $reward)
+    {
+        $this->assertNotEmpty($reward);
+
+        if (!$reward->get([$reward::COL_NAME => 'name'])) {
+            $reward->award_id = Uuid::uuid();
+            $reward->level = 1;
+
+            try {
+                $this->assertFalse($reward->post());
+            } catch (ErrorException $err) {
+                $this->assertNotEmpty($err);
+            }
+
+            $reward->name = 'name';
+            $reward->desc = 'desc';
+
+            $this->assertTrue($reward->post());
+        }
+
+        return $reward;
+    }
+
+    /**
+     * @covers  Reward::put()
+     * @depends testPostReward
+     * @param Reward $play
+     * @return Reward
+     */
+    public function testPutReward(Reward $play)
+    {
+        $this->assertTrue($play->put('*'));
+
+        return $play;
+    }
+
+    /**
      * @covers  Play::post()
      * @depends testNewPlay
-     * @depends testNewReward
+     * @depends testPutReward
      * @param Play $play
      * @param Reward $reward
      * @return Play
      */
     public function testPostPlay(Play $play, Reward $reward)
     {
+        $this->assertNotEmpty($play);
+        $this->assertNotEmpty($reward);
+
         if (!$play->get([$play::COL_NAME => 'name'])) {
             $play->name = 'name';
+            $play->desc = 'desc';
             $play->rule = 'rule';
             $play->daily = true;
             $play->limit = 3;
             $play->size = 10000;
 
-            $this->assertFalse($play->post());
+            try {
+                $this->assertFalse($play->post());
+            } catch (ErrorException $err) {
+                $this->assertNotEmpty($err);
+            }
 
             $play->addReward($reward->id, 10);
 
@@ -64,23 +127,11 @@ class ModelTest extends TestCase
     }
 
     /**
-     * @return Reward
-     */
-    public function testNewReward()
-    {
-        $reward = new Reward();
-        $this->assertNotEmpty($reward);
-
-        return $reward;
-    }
-
-    /**
-     * @depends testNewPlay
-     * @depends testNewReward
+     * @depends testPutPlay
      * @param Play $play
-     * @param Reward $reward
      */
-    public function testPlay(Play $play, Reward $reward)
+    public function testPlay(Play $play)
     {
+        $this->assertNotEmpty($play);
     }
 }
