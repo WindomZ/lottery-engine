@@ -78,6 +78,15 @@ class Record extends DbRecord
      */
     public static function list(array $where = null, int $limit = 0, int $page = 0)
     {
-        return (new Reward())->select($where, $limit, $page);
+        return (new Record())->select($where, $limit, $page);
+    }
+
+    /**
+     * @param array|null $where
+     * @return int
+     */
+    public static function total(array $where = null): int
+    {
+        return (new Record())->count($where);
     }
 }

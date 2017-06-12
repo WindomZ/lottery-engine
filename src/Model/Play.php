@@ -4,6 +4,7 @@ namespace LotteryEngine\Model;
 
 use LotteryEngine\Database\Play as DbPlay;
 use LotteryEngine\Exception\ErrorException;
+use LotteryEngine\Util\Date;
 use LotteryEngine\Util\Uuid;
 
 /**
@@ -99,13 +100,42 @@ class Play extends DbPlay
         return $id;
     }
 
+    public function playCount(string $user_id): int
+    {
+        if ($this->limit > 0) {
+            $count = Record::total(
+                $this->daily ? [
+                    Record::COL_USER_ID => $user_id,
+                    Record::COL_PLAY_ID => $this->id,
+                    Record::COL_POST_TIME => Date::get_now_time(),
+                ] : [
+                    Record::COL_USER_ID => $user_id,
+                    Record::COL_PLAY_ID => $this->id,
+                ]
+            );
+            if ($count >= $this->limit) {
+                return 0;
+            }
+
+            return $this->limit - $count;
+        }
+
+        return -1;
+    }
+
     public function play(string $user_id): bool
     {
         if (!Uuid::isValid($user_id)) {
             throw new ErrorException('"user_id" should be UUID: '.$user_id);
         }
 
+        // TODO: LOCK...
+
         if (!$this->refresh() || !$this->pass()) {
+            return false;
+        }
+
+        if ($this->playCount($user_id) === 0) {
             return false;
         }
 
@@ -119,13 +149,17 @@ class Play extends DbPlay
         $record->winning = $reward->pass();
 
         if ($record->winning) {
-            // TODO: play--
+            $record->winning = $this->increase($this::COL_COUNT);
         }
         if ($record->winning) {
-            // TODO: reward--
+            $record->winning = $reward->increase($reward::COL_COUNT);
         }
 
+        var_dump($record);
+
 //        $record->post();
+
+        // TODO: UNLOCK...
 
         return true;
     }

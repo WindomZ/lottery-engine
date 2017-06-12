@@ -123,6 +123,20 @@ abstract class BaseId extends BaseList
     }
 
     /**
+     * @param string $column
+     * @param int $count
+     * @param array $where
+     * @param array $data
+     * @return bool
+     */
+    protected function increase(string $column, int $count = 1, array $where = [], array $data = []): bool
+    {
+        $where[self::COL_ID] = $this->id;
+
+        return parent::increase($column, $count, $where, $data);
+    }
+
+    /**
      * @param string $id
      * @return bool
      */
