@@ -69,8 +69,8 @@ class Reward extends BaseTemplate2
         parent::toInstance($data);
 
         $this->award_id = $data[self::COL_AWARD_ID];
-        $this->size = $data[self::COL_SIZE];
-        $this->count = $data[self::COL_COUNT];
+        $this->size = intval($data[self::COL_SIZE]);
+        $this->count = intval($data[self::COL_COUNT]);
 
         return $this;
     }

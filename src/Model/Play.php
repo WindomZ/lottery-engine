@@ -103,12 +103,16 @@ class Play extends DbPlay
     public function playCount(string $user_id): int
     {
         if ($this->limit > 0) {
-            $count = Record::total(
-                $this->daily ? [
-                    Record::COL_USER_ID => $user_id,
-                    Record::COL_PLAY_ID => $this->id,
-                    Record::COL_POST_TIME => Date::get_now_time(),
-                ] : [
+            $count = $this->daily ? Record::totalQuery(
+                sprintf(
+                    "%s = :user_id AND %s = :play_id AND TO_DAYS(%s) = TO_DAYS(NOW())",
+                    Record::COL_USER_ID,
+                    Record::COL_PLAY_ID,
+                    Record::COL_POST_TIME
+                ),
+                [':user_id' => $user_id, ':play_id' => $this->id]
+            ) : Record::total(
+                [
                     Record::COL_USER_ID => $user_id,
                     Record::COL_PLAY_ID => $this->id,
                 ]
@@ -155,9 +159,7 @@ class Play extends DbPlay
             $record->winning = $reward->increase($reward::COL_COUNT);
         }
 
-        var_dump($record);
-
-//        $record->post();
+        $record->post();
 
         // TODO: UNLOCK...
 

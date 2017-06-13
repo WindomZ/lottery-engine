@@ -91,9 +91,9 @@ class Play extends BaseTemplate2
 
         $this->rule = $data[self::COL_RULE];
         $this->daily = $data[self::COL_DAILY];
-        $this->limit = $data[self::COL_LIMIT];
-        $this->size = $data[self::COL_SIZE];
-        $this->count = $data[self::COL_COUNT];
+        $this->limit = intval($data[self::COL_LIMIT]);
+        $this->size = intval($data[self::COL_SIZE]);
+        $this->count = intval($data[self::COL_COUNT]);
         $this->weights = json_decode($data[self::COL_WEIGHTS], true);
 
         return $this;

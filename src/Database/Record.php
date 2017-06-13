@@ -79,7 +79,7 @@ class Record extends BaseId
         $this->user_id = $data[self::COL_USER_ID];
         $this->play_id = $data[self::COL_PLAY_ID];
         $this->reward_id = $data[self::COL_REWARD_ID];
-        $this->winning = $data[self::COL_WINNING];
+        $this->winning = boolval($data[self::COL_WINNING]);
 
         return $this;
     }

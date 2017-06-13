@@ -89,4 +89,14 @@ class Record extends DbRecord
     {
         return (new Record())->count($where);
     }
+
+    /**
+     * @param string $where
+     * @param array $map
+     * @return int
+     */
+    public static function totalQuery(string $where, array $map = []): int
+    {
+        return (new Record())->countQuery($where, $map);
+    }
 }
