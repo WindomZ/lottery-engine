@@ -33,4 +33,13 @@ class Database extends Medoo
             ]
         );
     }
+
+    /**
+     * @param $table
+     * @return string
+     */
+    public function tableQuote($table)
+    {
+        return $this->prefix.$table;
+    }
 }

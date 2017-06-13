@@ -128,10 +128,13 @@ abstract class BaseId extends BaseList
      * @param array $where
      * @param array $data
      * @return bool
+     * @throws ErrorException
      */
     protected function increase(string $column, int $count = 1, array $where = [], array $data = []): bool
     {
-        $where[self::COL_ID] = $this->id;
+        if (!array_key_exists(self::COL_ID, $where)) {
+            $where[self::COL_ID] = $this->id;
+        }
 
         return parent::increase($column, $count, $where, $data);
     }

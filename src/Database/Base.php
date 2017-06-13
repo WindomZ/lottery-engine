@@ -131,18 +131,59 @@ abstract class Base
     }
 
     /**
+     * @param string $where
+     * @param array $map
+     * @return int
+     */
+    protected function countQuery(string $where, array $map = []): int
+    {
+        if (empty($where)) {
+            return -1;
+        }
+
+        $query = 'SELECT COUNT(*) FROM '
+            .$this->DB()->tableQuote($this->getTableName())
+            .' WHERE '
+            .$where;
+        $date = $this->DB()->query($query, $map)->fetchAll();
+        if (empty($date) || empty($date[0])) {
+            return -1;
+        }
+
+        $count = intval($date[0]['COUNT(*)']);
+        if (!$count) {
+            return -1;
+        }
+
+        return $count;
+    }
+
+    /**
      * @param string $column
      * @param int $count
      * @param array $where
      * @param array $data
      * @return bool
+     * @throws ErrorException
      */
-    protected function increase(string $column, int $count, array $where, array $data = []): bool
+    protected function increase(string $column, int $count = 1, array $where, array $data = []): bool
     {
         if (empty($column) || empty($count)) {
             return false;
         }
 
-        return $this->put(array_merge($data, [$column.'[+]' => $count]), $where);
+        $this->beforePut();
+
+        $data = array_merge($data, [$column.'[+]' => $count]);
+        if (empty($data)) {
+            return false;
+        }
+
+        $query = $this->DB()->update($this->getTableName(), $data, $where);
+        if ($query->errorCode() !== '00000') {
+            throw new ErrorException($query->errorInfo()[2]);
+        }
+
+        return true;
     }
 }
