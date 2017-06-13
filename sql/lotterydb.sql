@@ -22,6 +22,20 @@ create table lotterydb.le_play
 )
 ;
 
+create table lotterydb.le_record
+(
+	id char(36) not null,
+	post_time datetime default CURRENT_TIMESTAMP not null,
+	put_time datetime default CURRENT_TIMESTAMP not null,
+	user_id char(36) not null,
+	play_id char(36) not null,
+	reward_id char(36) not null,
+	winning tinyint(1) default '1' not null,
+	constraint le_record_id_uindex
+		unique (id)
+)
+;
+
 create table lotterydb.le_reward
 (
 	id char(36) not null,
