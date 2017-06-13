@@ -2,6 +2,8 @@
 
 namespace LotteryEngine\Config;
 
+use PDO;
+
 /**
  * Class Config
  * @package LotteryEngine\Config
@@ -20,8 +22,15 @@ class Config extends \Noodlehaus\Config
             'database_name' => 'lotterydb',
             'database_username' => 'root',
             'database_password' => 'root',
+            'charset' => 'utf8',
             'database_logging' => false,
             'database_prefix' => 'le_',
+            'option' => [
+                PDO::ATTR_CASE => PDO::CASE_NATURAL,
+            ],
+            'command' => [
+                'SET SQL_MODE=ANSI_QUOTES',
+            ],
         ];
     }
 }

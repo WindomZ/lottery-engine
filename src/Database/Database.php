@@ -25,8 +25,11 @@ class Database extends Medoo
                 'username' => $config->get('database_username'),
                 'password' => $config->get('database_password'),
                 'port' => $config->get('database_port'),
+                'charset' => $config->get('database.charset'),
                 'logging' => $config->get('database_logging'),
                 'prefix' => $config->get('database_prefix'),
+                'option' => $config->get('database.option'),
+                'command' => $config->get('database.command'),
             ]
         );
     }
