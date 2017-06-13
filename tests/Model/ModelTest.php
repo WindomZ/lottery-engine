@@ -37,7 +37,7 @@ class ModelTest extends TestCase
 
             $reward->name = 'name';
             $reward->desc = 'desc';
-            $reward->size = 10000;
+            $reward->size = 5;
 
             $this->assertTrue($reward->post());
         } else {
@@ -83,7 +83,7 @@ class ModelTest extends TestCase
             $play->rule = 'rule';
             $play->daily = true;
             $play->limit = 3;
-            $play->size = 10000;
+            $play->size = 5;
 
             try {
                 $this->assertFalse($play->post());
