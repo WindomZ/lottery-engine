@@ -61,7 +61,9 @@ Lottery::setConfigPath('./config.yml');
 |bool|active|N|Y|是否生效|
 |string|level|N|Y|级别|
 |string|desc|N|Y|描述|
-|string|award_id|Y|Y|指定奖品UUID|
+|string|award_id|N|Y|指定奖品UUID|
+|string|award_class|N|Y|指定奖品类别(第一级分类，单选，可选)|
+|string|award_kind|N|Y|指定奖品类型(第二级分类，多选，可选)|
 |int|size|Y|Y|奖品派发总数|
 |int|count|N|N|奖品派发数量|
 
@@ -122,6 +124,14 @@ Lottery::setConfigPath('./config.yml');
   - @param
     - array $columns 标明修改的字段，选用`Reward::COL_`开头的字段组成数组
   - @return bool
+
+- Reward->setAward($award_id, $award_class, $award_kind)
+  - @description 配置奖品(`Reward`)的外部指向
+  - @param
+    - string $award_id 指定奖品外部UUID
+    - int $award_class 指定奖品的类别
+    - int $award_kind 指定奖品的类型
+  - @note 最后记得调用`post`或`put`来提交修改
 
 - Reward::ID_NULL
   - @description 默认的奖品UUID - 未获奖
