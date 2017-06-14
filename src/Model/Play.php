@@ -57,6 +57,7 @@ class Play extends DbPlay
     /**
      * @param string $reward_id
      * @param int $weight
+     * @return Play
      * @throws ErrorException
      */
     public function setReward(string $reward_id, int $weight = 0)
@@ -68,6 +69,8 @@ class Play extends DbPlay
             $weight = 0;
         }
         $this->weights[$reward_id] = $weight;
+
+        return $this;
     }
 
     /**

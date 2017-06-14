@@ -138,4 +138,19 @@ class Reward extends DbReward
 
         return parent::increase($column, $count, $where, $data);
     }
+
+    /**
+     * @param string $award_id
+     * @param int $award_class
+     * @param int $award_kind
+     * @return Reward
+     */
+    public function setAward(string $award_id = '', int $award_class = 0, int $award_kind = 0)
+    {
+        $this->award_id = $award_id;
+        $this->award_class = $award_class;
+        $this->award_kind = $award_kind;
+
+        return $this;
+    }
 }

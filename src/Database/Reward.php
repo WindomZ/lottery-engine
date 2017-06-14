@@ -11,6 +11,8 @@ use LotteryEngine\Exception\ErrorException;
 class Reward extends BaseTemplate2
 {
     const COL_AWARD_ID = 'award_id';
+    const COL_AWARD_CLASS = 'award_class';
+    const COL_AWARD_KIND = 'award_kind';
     const COL_SIZE = 'size';
     const COL_COUNT = 'count';
 
@@ -18,6 +20,16 @@ class Reward extends BaseTemplate2
      * @var string
      */
     public $award_id = '';
+
+    /**
+     * @var int
+     */
+    public $award_class = 0;
+
+    /**
+     * @var int
+     */
+    public $award_kind = 0;
 
     /**
      * @var int
@@ -54,6 +66,8 @@ class Reward extends BaseTemplate2
             parent::toArray(),
             [
                 self::COL_AWARD_ID => $this->award_id,
+                self::COL_AWARD_CLASS => $this->award_class,
+                self::COL_AWARD_KIND => $this->award_kind,
                 self::COL_SIZE => $this->size,
                 self::COL_COUNT => $this->count,
             ]
@@ -69,6 +83,8 @@ class Reward extends BaseTemplate2
         parent::toInstance($data);
 
         $this->award_id = $data[self::COL_AWARD_ID];
+        $this->award_class = intval($data[self::COL_AWARD_CLASS]);
+        $this->award_kind = intval($data[self::COL_AWARD_KIND]);
         $this->size = intval($data[self::COL_SIZE]);
         $this->count = intval($data[self::COL_COUNT]);
 
