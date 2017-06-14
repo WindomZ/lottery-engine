@@ -12,6 +12,9 @@ use LotteryEngine\Util\Uuid;
  */
 class Record extends DbRecord
 {
+    const ID_NULL = '00000000-0000-0000-0000-000000000001';
+    const ID_AGAIN = '00000000-0000-0000-0000-000000000002';
+
     /**
      * Record constructor.
      */
@@ -35,8 +38,20 @@ class Record extends DbRecord
     public static function object(string $id = null)
     {
         $obj = new Record();
-        if ($id && !$obj->getById($id)) {
-            return null;
+        if ($id) {
+            switch ($id) {
+                case self::ID_NULL:
+                case self::ID_AGAIN:
+                    $obj->id = $id;
+                    $obj->reward_id = $id;
+                    $obj->winning = true;
+
+                    return $obj;
+                default:
+                    if (!$obj->getById($id)) {
+                        return null;
+                    }
+            }
         }
 
         return $obj;

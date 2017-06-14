@@ -22,6 +22,10 @@ create table lotterydb.le_play
 )
 ;
 
+create index le_play_name_active_index
+	on lotterydb.le_play (name, active)
+;
+
 create table lotterydb.le_record
 (
 	id char(36) not null,
@@ -36,6 +40,22 @@ create table lotterydb.le_record
 )
 ;
 
+create index le_record_play_id_index
+	on lotterydb.le_record (play_id)
+;
+
+create index le_record_reward_id_index
+	on lotterydb.le_record (reward_id)
+;
+
+create index le_record_user_id_index
+	on lotterydb.le_record (user_id)
+;
+
+create index le_record_play_id_reward_id_index
+	on lotterydb.le_record (play_id, reward_id)
+;
+
 create table lotterydb.le_reward
 (
 	id char(36) not null,
@@ -46,10 +66,24 @@ create table lotterydb.le_reward
 	level int default '0' not null,
 	`desc` varchar(256) default '' not null,
 	award_id char(36) not null,
+	award_class int default '0' not null,
+	award_kind int default '0' not null,
 	size int default '0' not null,
 	count int default '0' not null,
 	constraint le_reward_id_uindex
 		unique (id)
 )
+;
+
+create index le_reward_award_id_index
+	on lotterydb.le_reward (award_id)
+;
+
+create index le_reward_name_active_index
+	on lotterydb.le_reward (name, active)
+;
+
+create index le_reward_award_class_award_kind_index
+	on lotterydb.le_reward (award_class, award_kind)
 ;
 

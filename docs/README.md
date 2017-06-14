@@ -61,7 +61,9 @@ Lottery::setConfigPath('./config.yml');
 |bool|active|N|Y|是否生效|
 |string|level|N|Y|级别|
 |string|desc|N|Y|描述|
-|string|award_id|Y|Y|指定奖品UUID|
+|string|award_id|N|Y|指定奖品UUID|
+|string|award_class|N|Y|指定奖品类别(第一级分类，单选，可选)|
+|string|award_kind|N|Y|指定奖品类型(第二级分类，多选，可选)|
 |int|size|Y|Y|奖品派发总数|
 |int|count|N|N|奖品派发数量|
 
@@ -123,6 +125,20 @@ Lottery::setConfigPath('./config.yml');
     - array $columns 标明修改的字段，选用`Reward::COL_`开头的字段组成数组
   - @return bool
 
+- Reward->setAward($award_id, $award_class, $award_kind)
+  - @description 配置奖品(`Reward`)的外部指向
+  - @param
+    - string $award_id 指定奖品外部UUID
+    - int $award_class 指定奖品的类别
+    - int $award_kind 指定奖品的类型
+  - @note 最后记得调用`post`或`put`来提交修改
+
+- Reward::ID_NULL
+  - @description 默认的奖品UUID - 未获奖
+
+- Reward::ID_AGAIN
+  - @description 默认的奖品UUID - 再来一次
+
 #### 玩法(`Play`)
 
 - Play::object($id = null)
@@ -149,7 +165,7 @@ Lottery::setConfigPath('./config.yml');
     - array $columns 标明修改的字段，选用`Play::COL_`开头的字段组成数组
   - @return bool
 
-- Play->addReward($reward_id, $weight)
+- Play->setReward($reward_id, $weight)
   - @description 配置抽奖玩法(`Play`)的奖品(`Reward`)概率
   - @param
     - string $reward_id 奖品UUID
@@ -183,6 +199,12 @@ Lottery::setConfigPath('./config.yml');
     - int $limit 筛选数量
     - int $page 筛选页数
   - @return array
+
+- Record::ID_NULL
+  - @description 默认的记录UUID - 空记录(预留)
+
+- Record::ID_AGAIN
+  - @description 默认的记录UUID - 空记录(再来一次)
 
 #### 公共方法
 
