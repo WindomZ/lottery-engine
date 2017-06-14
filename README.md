@@ -42,6 +42,10 @@ load the specified configuration file through the following implementation:
 Lottery::setConfigPath('./config.yml');
 ```
 
+## Usage
+
+Refer to the [Document](https://windomz.github.io/lottery-engine)(_Currently only Chinese_) for details.
+
 ## License
 
 The [Apache License 2.0](https://github.com/WindomZ/lottery-engine/blob/master/LICENSE)
