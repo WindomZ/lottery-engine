@@ -6,7 +6,7 @@ namespace LotteryEngine\Database;
  * Class BaseList
  * @package LotteryEngine\Database
  */
-abstract class BaseList extends Base
+abstract class BaseList extends BaseCommon
 {
     /**
      * @var array
