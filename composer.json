@@ -4,7 +4,12 @@
     "keywords": ["lottery", "engine"],
     "type": "library",
     "require": {
-        "php": ">=7.0"
+        "php": ">=7.0",
+        "symfony/yaml": "^3.3",
+        "hassankhan/config": "^0.10.0",
+        "ramsey/uuid": "^3.6",
+        "catfan/Medoo": "^1.4",
+        "malkusch/lock": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.2",
@@ -25,9 +30,13 @@
         "psr-4": {"LotteryEngine\\Test\\": "tests"}
     },
     "scripts": {
-        "test": [
+        "testing": [
             "parallel-lint . --exclude vendor",
             "phpunit"
+        ],
+        "test": [
+            "parallel-lint . --exclude vendor",
+            "phpunit ./tests/Util"
         ]
     }
 }
