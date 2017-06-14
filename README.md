@@ -48,4 +48,4 @@ Refer to the [Document](https://windomz.github.io/lottery-engine)(_Currently onl
 
 ## License
 
-The [Apache License 2.0](https://github.com/WindomZ/lottery-engine/blob/master/LICENSE)
+The [MIT License](https://github.com/WindomZ/lottery-engine/blob/master/LICENSE)
