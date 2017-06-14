@@ -93,6 +93,8 @@ class ModelTest extends TestCase
             }
 
             $play->setReward($reward->id, 10);
+            $play->setReward(Reward::ID_NULL, 20);
+            $play->setReward(Reward::ID_AGAIN, 30);
 
             $this->assertTrue($play->post());
         } else {
