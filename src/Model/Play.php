@@ -151,6 +151,10 @@ class Play extends DbPlay
             throw new ErrorException('No reward!');
         }
 
+        if ($id === Reward::ID_AGAIN) {
+            return Record::ID_AGAIN;
+        }
+
         $activity = $this;
         $record = Record::create($user_id, $this->id, $id);
 
