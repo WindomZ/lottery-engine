@@ -27,7 +27,7 @@ class ModelTest extends TestCase
         if (!$list || !$list[Reward::ARG_SIZE]) {
             $reward = new Reward();
 
-            $reward->award_id = Uuid::uuid();
+            $reward->setAward(Uuid::uuid(), 1, 2);
             $reward->level = 1;
 
             try {
@@ -135,16 +135,9 @@ class ModelTest extends TestCase
         $this->assertNotEmpty($recordId2);
         $recordId3 = $play->play($user_id);
         $this->assertNotEmpty($recordId3);
-        $recordId4 = $play->play($user_id);
-        $this->assertNotEmpty($recordId4);
 
         $this->assertTrue(Record::object($recordId1)->winning);
         $this->assertTrue(Record::object($recordId2)->winning);
         $this->assertTrue(Record::object($recordId3)->winning);
-        if ($recordId4 !== Record::ID_AGAIN) {
-            $this->assertEmpty(Record::object($recordId4));
-        } else {
-            $this->assertTrue(Record::object($recordId4)->winning);
-        }
     }
 }
