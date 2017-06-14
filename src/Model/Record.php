@@ -63,6 +63,7 @@ class Record extends DbRecord
 
         $obj = new Record();
 
+        $obj->id = Uuid::uuid();
         $obj->user_id = $user_id;
         $obj->play_id = $play_id;
         $obj->reward_id = $reward_id;

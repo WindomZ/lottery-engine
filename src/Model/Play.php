@@ -4,7 +4,7 @@ namespace LotteryEngine\Model;
 
 use LotteryEngine\Database\Play as DbPlay;
 use LotteryEngine\Exception\ErrorException;
-use LotteryEngine\Util\Date;
+use LotteryEngine\Util\Lock;
 use LotteryEngine\Util\Uuid;
 
 /**
@@ -127,42 +127,43 @@ class Play extends DbPlay
         return -1;
     }
 
-    public function play(string $user_id): bool
+    public function play(string $user_id): string
     {
         if (!Uuid::isValid($user_id)) {
             throw new ErrorException('"user_id" should be UUID: '.$user_id);
         }
 
-        // TODO: LOCK...
-
-        if (!$this->refresh() || !$this->pass()) {
-            return false;
-        }
-
-        if ($this->playCount($user_id) === 0) {
-            return false;
+        if (!$this->pass()) {
+            throw new ErrorException('Activity end!');
         }
 
         $id = $this->randRewardId();
         if (empty($id)) {
-            return false;
-        }
-        $reward = Reward::object($id);
-
-        $record = Record::create($user_id, $this->id, $reward->id);
-        $record->winning = $reward->pass();
-
-        if ($record->winning) {
-            $record->winning = $this->increase($this::COL_COUNT);
-        }
-        if ($record->winning) {
-            $record->winning = $reward->increase($reward::COL_COUNT);
+            throw new ErrorException('No reward!');
         }
 
-        $record->post();
+        $activity = $this;
+        $record = Record::create($user_id, $this->id, $id);
 
-        // TODO: UNLOCK...
+        Lock::check(
+            function () use ($activity, $record) {
+                return $activity->refresh() && $activity->pass() && ($activity->playCount($record->user_id) !== 0);
+            },
+            function () use ($activity, $record) {
+                $reward = Reward::object($record->reward_id);
 
-        return true;
+                $record->winning = $reward->refresh() && $reward->pass();
+                if ($record->winning) {
+                    $record->winning = $activity->increase($activity::COL_COUNT);
+                }
+                if ($record->winning) {
+                    $record->winning = $reward->increase($reward::COL_COUNT);
+                }
+
+                $record->post();
+            }
+        );
+
+        return $record->id;
     }
 }

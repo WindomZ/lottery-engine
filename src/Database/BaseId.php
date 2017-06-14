@@ -68,7 +68,9 @@ abstract class BaseId extends BaseList
      */
     public function post(): bool
     {
-        $this->id = Uuid::uuid();
+        if (!Uuid::isValid($this->id)) {
+            $this->id = Uuid::uuid();
+        }
         $this->post_time = Date::get_now_time();
         $this->put_time = Date::get_now_time();
 
