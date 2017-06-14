@@ -4,6 +4,7 @@ namespace LotteryEngine\Test\Model;
 
 use LotteryEngine\Exception\ErrorException;
 use LotteryEngine\Model\Play;
+use LotteryEngine\Model\Record;
 use LotteryEngine\Model\Reward;
 use LotteryEngine\Util\Uuid;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +38,7 @@ class ModelTest extends TestCase
 
             $reward->name = 'name';
             $reward->desc = 'desc';
-            $reward->size = 5;
+            $reward->size = 6;
 
             $this->assertTrue($reward->post());
         } else {
@@ -83,7 +84,7 @@ class ModelTest extends TestCase
             $play->rule = 'rule';
             $play->daily = true;
             $play->limit = 3;
-            $play->size = 5;
+            $play->size = 6;
 
             try {
                 $this->assertFalse($play->post());
@@ -124,6 +125,20 @@ class ModelTest extends TestCase
     {
         $this->assertNotEmpty($play);
 
-        $this->assertTrue($play->play($play->id));
+        $user_id = Uuid::uuid();
+
+        $recordId1 = $play->play($user_id);
+        $this->assertNotEmpty($recordId1);
+        $recordId2 = $play->play($user_id);
+        $this->assertNotEmpty($recordId2);
+        $recordId3 = $play->play($user_id);
+        $this->assertNotEmpty($recordId3);
+        $recordId4 = $play->play($user_id);
+        $this->assertNotEmpty($recordId4);
+
+        $this->assertTrue(Record::object($recordId1)->winning);
+        $this->assertTrue(Record::object($recordId2)->winning);
+        $this->assertTrue(Record::object($recordId3)->winning);
+        $this->assertEmpty(Record::object($recordId4));
     }
 }
