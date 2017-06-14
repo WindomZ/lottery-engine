@@ -141,6 +141,10 @@ class ModelTest extends TestCase
         $this->assertTrue(Record::object($recordId1)->winning);
         $this->assertTrue(Record::object($recordId2)->winning);
         $this->assertTrue(Record::object($recordId3)->winning);
-        $this->assertEmpty(Record::object($recordId4));
+        if ($recordId4 !== Record::ID_AGAIN) {
+            $this->assertEmpty(Record::object($recordId4));
+        } else {
+            $this->assertTrue(Record::object($recordId4)->winning);
+        }
     }
 }
