@@ -92,7 +92,7 @@ class ModelTest extends TestCase
                 $this->assertNotEmpty($err);
             }
 
-            $play->addReward($reward->id, 10);
+            $play->setReward($reward->id, 10);
 
             $this->assertTrue($play->post());
         } else {

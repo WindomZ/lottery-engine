@@ -59,13 +59,13 @@ class Play extends DbPlay
      * @param int $weight
      * @throws ErrorException
      */
-    public function addReward(string $reward_id, int $weight = 0)
+    public function setReward(string $reward_id, int $weight = 0)
     {
         if (empty($reward_id)) {
             throw new ErrorException('"reward_id" should be valid UUID: '.$reward_id);
         }
-        if ($weight <= 0) {
-            throw new ErrorException('"weight" should be positive: '.$weight);
+        if ($weight < 0) {
+            $weight = 0;
         }
         $this->weights[$reward_id] = $weight;
     }
