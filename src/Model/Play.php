@@ -100,6 +100,10 @@ class Play extends DbPlay
         return $id;
     }
 
+    /**
+     * @param string $user_id
+     * @return int
+     */
     public function playCount(string $user_id): int
     {
         if ($this->limit > 0) {
@@ -124,9 +128,14 @@ class Play extends DbPlay
             return $this->limit - $count;
         }
 
-        return -1;
+        return $this->limit;
     }
 
+    /**
+     * @param string $user_id
+     * @return string
+     * @throws ErrorException
+     */
     public function play(string $user_id): string
     {
         if (!Uuid::isValid($user_id)) {
@@ -147,7 +156,7 @@ class Play extends DbPlay
 
         Lock::check(
             function () use ($activity, $record) {
-                return $activity->refresh() && $activity->pass() && ($activity->playCount($record->user_id) !== 0);
+                return $activity->refresh() && $activity->pass() && ($activity->playCount($record->user_id) > 0);
             },
             function () use ($activity, $record) {
                 $reward = Reward::object($record->reward_id);
