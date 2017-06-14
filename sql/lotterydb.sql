@@ -66,6 +66,8 @@ create table lotterydb.le_reward
 	level int default '0' not null,
 	`desc` varchar(256) default '' not null,
 	award_id char(36) not null,
+	award_class int default '0' not null,
+	award_kind int default '0' not null,
 	size int default '0' not null,
 	count int default '0' not null,
 	constraint le_reward_id_uindex
@@ -79,5 +81,9 @@ create index le_reward_award_id_index
 
 create index le_reward_name_active_index
 	on lotterydb.le_reward (name, active)
+;
+
+create index le_reward_award_class_award_kind_index
+	on lotterydb.le_reward (award_class, award_kind)
 ;
 
