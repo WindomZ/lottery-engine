@@ -1,6 +1,6 @@
 DROP SCHEMA IF EXISTS lotterydb;
 
-CREATE SCHEMA lotterydb;
+CREATE SCHEMA lotterydb CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 create table lotterydb.le_play
 (
