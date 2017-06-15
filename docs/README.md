@@ -54,7 +54,7 @@ Lottery::setConfigPath('./config.yml');
 #### 奖品(`Reward`)
 
 |类型|字段|必填|修改|描述|
-|---|---|:---:|---|
+|---|---|:---:|:---:|---|
 |string|id|N|N|UUID|
 |string|post_time|N|N|创建时间|
 |string|put_time|N|N|修改时间|
@@ -71,7 +71,7 @@ Lottery::setConfigPath('./config.yml');
 #### 玩法(`Play`)
 
 |类型|字段|必填|修改|描述|
-|---|---|:---:|---|
+|---|---|:---:|:---:|---|
 |string|id|N|N|UUID|
 |string|post_time|N|N|创建时间|
 |string|put_time|N|N|修改时间|
@@ -89,7 +89,7 @@ Lottery::setConfigPath('./config.yml');
 #### 记录(`Record`)
 
 |类型|字段|必填|修改|描述|
-|---|---|:---:|---|
+|---|---|:---:|:---:|---|
 |string|id|N|N|UUID|
 |string|post_time|N|N|创建时间|
 |string|put_time|N|N|修改时间|
@@ -108,12 +108,13 @@ Lottery::setConfigPath('./config.yml');
     - string $id 奖品UUID，或者留空来构建新的奖品(`Reward`)
   - @return object
 
-- Reward::list($where, $limit, $page)
+- Reward::list($where, $limit, $page, $order)
   - @description 获取一组奖品(`Reward`)
   - @param
     - array $where 筛选范围，选用`Reward::COL_`开头的字段
     - int $limit 筛选数量
     - int $page 筛选页数
+    - array $order 筛选排序
   - @return array
 
 - Reward->post()
@@ -148,12 +149,13 @@ Lottery::setConfigPath('./config.yml');
     - string $id 玩法UUID，或者留空来构建新的玩法(`Play`)
   - @return object
 
-- Play::list($where, $limit, $page)
+- Play::list($where, $limit, $page, $order)
   - @description 获取一组玩法(`Play`)
   - @param
     - array $where 筛选范围，选用`Play::COL_`开头的字段
     - int $limit 筛选数量
     - int $page 筛选页数
+    - array $order 筛选排序
   - @return array
 
 - Play->post()
@@ -193,12 +195,13 @@ Lottery::setConfigPath('./config.yml');
     - string $id 记录UUID
   - @return object
 
-- Record::list($where, $limit, $page)
+- Record::list($where, $limit, $page, $order)
   - @description 获取一组记录(`Record`)
   - @param
     - array $where 筛选范围，选用`Record::COL_`开头的字段
     - int $limit 筛选数量
     - int $page 筛选页数
+    - array $order 筛选排序
   - @return array
 
 - Record::ID_NULL
@@ -209,15 +212,15 @@ Lottery::setConfigPath('./config.yml');
 
 #### 公共方法
 
-- M*::toJSON($obj)
+- *::toJSON($obj)
   - @description 转为JSON格式对象
   - @demo `Play::toJSON(Play::get('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'))`
   - @param
     - object $obj 对象
   - @return object
 
-- M*::where($type, $key)
-  - @description 使用`M*::list($where, $limit, $page)`时，构造`$where`的高级用法。
+- *::where($type, $key)
+  - @description 使用`*::list($where, $limit, $page, $order)`时，构造`$where`的高级用法。
   - @demo `[Play::where(Play::WHERE_GTE, Play::COL_LIMIT) => 10]`，等同于`[Play::COL_LIMIT>=10]`。
   - @param
     - int $type 对象
