@@ -54,9 +54,10 @@ abstract class BaseList extends BaseCommon
      * @param array|null $where
      * @param int $limit
      * @param int $page
+     * @param array|null $order
      * @return bool
      */
-    private function _select(array $where = null, int $limit = 0, int $page = 0)
+    private function _select(array $where = null, int $limit = 0, int $page = 0, array $order = null)
     {
         $this->select_size = $this->DB()->count($this->getTableName(), $where);
         if (!$this->select_size) {
@@ -72,6 +73,13 @@ abstract class BaseList extends BaseCommon
             } else {
                 $where['LIMIT'] = $limit;
             }
+        }
+
+        if (!empty($order)) {
+            if (!$where) {
+                $where = array();
+            }
+            $where['ORDER'] = $order;
         }
 
         $data = $this->DB()->select($this->getTableName(), '*', $where);
@@ -98,11 +106,12 @@ abstract class BaseList extends BaseCommon
      * @param array|null $where
      * @param int $limit
      * @param int $page
+     * @param array|null $order
      * @return array|null
      */
-    public function select(array $where = null, int $limit = 0, int $page = 0)
+    public function select(array $where = null, int $limit = 0, int $page = 0, array $order = null)
     {
-        if ($this->_select($where, $limit, $page)) {
+        if ($this->_select($where, $limit, $page, $order)) {
             return [
                 self::ARG_DATA => $this->getList(),
                 self::ARG_SIZE => $this->getSize(),
