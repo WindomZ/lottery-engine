@@ -29,18 +29,15 @@ class Lock
 
     /**
      * @param callable $check
-     * @param callable $code
+     * @param callable|null $code
      */
-    public static function check(callable $check, callable $code)
+    public static function synchronized(callable $check, callable $code = null)
     {
-        self::mutex()->check($check)->then($code);
-    }
-
-    /**
-     * @param callable $code
-     */
-    public static function synchronized(callable $code)
-    {
-        self::mutex()->synchronized($code);
+        if (isset($code)) {
+            self::mutex()->check($check)->then($code);
+        } else {
+            $code = $check;
+            self::mutex()->synchronized($code);
+        }
     }
 }

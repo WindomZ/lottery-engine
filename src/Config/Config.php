@@ -22,13 +22,13 @@ class Config extends \Noodlehaus\Config
             'database_name' => 'lotterydb',
             'database_username' => 'root',
             'database_password' => 'root',
-            'charset' => 'utf8',
+            'database_charset' => 'utf8',
             'database_logging' => false,
             'database_prefix' => 'le_',
-            'option' => [
+            'database_option' => [
                 PDO::ATTR_CASE => PDO::CASE_NATURAL,
             ],
-            'command' => [
+            'database_command' => [
                 'SET SQL_MODE=ANSI_QUOTES',
             ],
         ];

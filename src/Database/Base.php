@@ -166,7 +166,7 @@ abstract class Base
      * @return bool
      * @throws ErrorException
      */
-    protected function increase(string $column, int $count = 1, array $where, array $data = []): bool
+    protected function increase(string $column, int $count = 1, array $where = [], array $data = []): bool
     {
         if (empty($column) || empty($count)) {
             return false;

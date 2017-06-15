@@ -47,11 +47,12 @@ class Play extends DbPlay
      * @param array|null $where
      * @param int $limit
      * @param int $page
+     * @param array|null $order
      * @return array|null
      */
-    public static function list(array $where = null, int $limit = 0, int $page = 0)
+    public static function list(array $where = null, int $limit = 0, int $page = 0, array $order = null)
     {
-        return (new Play())->select($where, $limit, $page);
+        return (new Play())->select($where, $limit, $page, $order);
     }
 
     /**
@@ -161,7 +162,7 @@ class Play extends DbPlay
         $activity = $this;
         $record = Record::create($user_id, $this->id, $id);
 
-        Lock::check(
+        Lock::synchronized(
             function () use ($activity, $record) {
                 return $activity->refresh() && $activity->pass() && ($activity->playCount($record->user_id) > 0);
             },

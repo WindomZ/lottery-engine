@@ -53,8 +53,8 @@ abstract class BaseTemplate1 extends BaseId
         parent::toInstance($data);
 
         $this->name = $data[self::COL_NAME];
-        $this->active = $data[self::COL_ACTIVE];
-        $this->level = $data[self::COL_LEVEL];
+        $this->active = boolval($data[self::COL_ACTIVE]);
+        $this->level = intval($data[self::COL_LEVEL]);
 
         return $this;
     }
