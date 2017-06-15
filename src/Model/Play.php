@@ -162,7 +162,7 @@ class Play extends DbPlay
         $activity = $this;
         $record = Record::create($user_id, $this->id, $id);
 
-        Lock::check(
+        Lock::synchronized(
             function () use ($activity, $record) {
                 return $activity->refresh() && $activity->pass() && ($activity->playCount($record->user_id) > 0);
             },
