@@ -90,7 +90,7 @@ class Reward extends DbReward
      * @return bool
      * @throws ErrorException
      */
-    public function put($columns, array $where = null): bool
+    public function put($columns, array $where = []): bool
     {
         if ($this->fake) {
             return true;

@@ -107,16 +107,20 @@ abstract class BaseId extends BaseList
 
     /**
      * @param array|string $columns
-     * @param array|null $where
+     * @param array $where
      * @return bool
      * @throws ErrorException
      */
-    public function put($columns, array $where = null): bool
+    public function put($columns, array $where = []): bool
     {
         if ($columns !== '*') {
             $columns = array_diff($columns, [self::COL_ID]);
             $columns = array_diff($columns, [self::COL_POST_TIME]);
             array_push($columns, self::COL_PUT_TIME);
+        }
+
+        if (!array_key_exists(self::COL_ID, $where)) {
+            $where[self::COL_ID] = $this->id;
         }
 
         $this->put_time = Date::get_now_time();
