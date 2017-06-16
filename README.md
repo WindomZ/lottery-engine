@@ -1,6 +1,6 @@
 # lottery-engine
 
-> A lottery component engine, fast, modularity and easy to deploy.
+> A lottery component engine - fast, modularity and easy to deploy.
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/windomz/lottery-engine.svg?style=flat-square)](https://packagist.org/packages/windomz/lottery-engine)
 [![Build Status](https://img.shields.io/travis/WindomZ/lottery-engine/master.svg?style=flat-square)](https://travis-ci.org/WindomZ/lottery-engine)
@@ -34,7 +34,7 @@ If only for quick testing,
 you can run `./sql/lotterydb.sql` in `MySQL` to quickly create a test database.
 
 Of course, you can also customize the `database name` based on `./sql/lotterydb.sql`, 
-but note that the `table name` can not be _MODIFIED_!
+but note that the `table name` _CANNOT MODIFY_!
 
 In the project initialization, 
 load the specified configuration file through the following implementation:
