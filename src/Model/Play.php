@@ -56,6 +56,66 @@ class Play extends DbPlay
     }
 
     /**
+     * @return bool
+     * @throws ErrorException
+     */
+    public function post(): bool
+    {
+        if ($this->rule) {
+            if (!Uuid::isValid($this->id)) {
+                $this->id = Uuid::uuid();
+            }
+            foreach ($this->weights as $r => $w) {
+                if (!Rule::create($this->id, $r, $w)->post()) {
+                    throw new ErrorException('Fail to add play rule!');
+                }
+            }
+        }
+
+        return parent::post();
+    }
+
+    /**
+     * @param array|string $columns
+     * @param array $where
+     * @return bool
+     * @throws ErrorException
+     */
+    public function put($columns, array $where = []): bool
+    {
+        if ($this->rule) {
+            if (gettype($columns) === 'string' || array_key_exists($this::COL_WEIGHTS, $columns)) {
+                $list = Rule::rules($this->id);
+                if (!empty($list)) {
+                    foreach ($this->weights as $r => $w) {
+                        $create = true;
+                        foreach ($list as $l) {
+                            if ($l instanceof Rule && $l->reward_id === $r) {
+                                if ($l->weight !== $w) {
+                                    $l->weight = $w;
+                                    if (!$l->put([Rule::COL_WEIGHT])) {
+                                        throw new ErrorException('Fail to put play rule!');
+                                    }
+                                }
+                                $create = false;
+                                break;
+                            }
+                        }
+                        if ($create) {
+                            $obj = Rule::create($this->id, $r, $w);
+                            if (!$obj->post()) {
+                                throw new ErrorException('Fail to post new play rule!');
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return parent::put($columns, $where);
+    }
+
+    /**
      * @param string $reward_id
      * @param int $weight
      * @return Play
@@ -77,11 +137,14 @@ class Play extends DbPlay
     /**
      * @return string
      */
-    private function randRewardId(): string
+    private function randomRewardId(): string
     {
         $id = '';
 
         $sum = 0;
+        if ($this->rule && empty($this->weights)) {
+            $this->weights = Rule::weights($this->id);
+        }
         foreach ($this->weights as $weight) {
             if (gettype($weight) === 'integer') {
                 $sum += $weight;
@@ -150,7 +213,7 @@ class Play extends DbPlay
             throw new ErrorException('Activity end!');
         }
 
-        $id = $this->randRewardId();
+        $id = $this->randomRewardId();
         if (empty($id)) {
             throw new ErrorException('No reward!');
         }

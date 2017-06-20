@@ -65,6 +65,7 @@ abstract class BaseId extends BaseList
 
     /**
      * @return bool
+     * @throws ErrorException
      */
     public function post(): bool
     {

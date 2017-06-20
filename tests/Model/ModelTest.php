@@ -81,16 +81,9 @@ class ModelTest extends TestCase
 
             $play->name = 'name';
             $play->desc = 'desc';
-            $play->rule = 'rule';
             $play->daily = true;
             $play->limit = 3;
             $play->size = 6;
-
-            try {
-                $this->assertFalse($play->post());
-            } catch (ErrorException $err) {
-                $this->assertNotEmpty($err);
-            }
 
             $play->setReward($reward->id, 10);
             $play->setReward(Reward::ID_NULL, 20);

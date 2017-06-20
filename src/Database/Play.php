@@ -10,17 +10,12 @@ use LotteryEngine\Exception\ErrorException;
  */
 class Play extends BaseTemplate2
 {
-    const COL_RULE = 'rule';
     const COL_DAILY = 'daily';
     const COL_LIMIT = 'limit';
     const COL_SIZE = 'size';
     const COL_COUNT = 'count';
     const COL_WEIGHTS = 'weights';
-
-    /**
-     * @var string
-     */
-    public $rule = '';
+    const COL_RULE = 'rule';
 
     /**
      * @var bool
@@ -48,6 +43,21 @@ class Play extends BaseTemplate2
     public $weights = array();
 
     /**
+     * @var bool
+     */
+    public $rule = false;
+
+    /**
+     * Play constructor.
+     */
+    protected function __construct()
+    {
+        parent::__construct();
+
+        $this->rule = !$this->DB()->getSupportJSON();
+    }
+
+    /**
      * @return Play
      */
     protected function newObject()
@@ -68,16 +78,24 @@ class Play extends BaseTemplate2
      */
     protected function toArray(): array
     {
+        $arr = [
+            self::COL_DAILY => $this->daily,
+            self::COL_LIMIT => $this->limit,
+            self::COL_SIZE => $this->size,
+            self::COL_COUNT => $this->count,
+            self::COL_RULE => $this->rule,
+        ];
+
+        if ($this->DB()->getSupportJSON()) {
+            $arr[self::COL_WEIGHTS] = json_encode($this->weights);
+        } else {
+            $this->rule = true;
+            $arr[self::COL_RULE] = true;
+        }
+
         return array_merge(
             parent::toArray(),
-            [
-                self::COL_RULE => $this->rule,
-                self::COL_DAILY => $this->daily,
-                self::COL_LIMIT => $this->limit,
-                self::COL_SIZE => $this->size,
-                self::COL_COUNT => $this->count,
-                self::COL_WEIGHTS => json_encode($this->weights),
-            ]
+            $arr
         );
     }
 
@@ -89,12 +107,14 @@ class Play extends BaseTemplate2
     {
         parent::toInstance($data);
 
-        $this->rule = $data[self::COL_RULE];
         $this->daily = $data[self::COL_DAILY];
         $this->limit = intval($data[self::COL_LIMIT]);
         $this->size = intval($data[self::COL_SIZE]);
         $this->count = intval($data[self::COL_COUNT]);
-        $this->weights = json_decode($data[self::COL_WEIGHTS], true);
+        if ($this->DB()->getSupportJSON()) {
+            $this->weights = json_decode($data[self::COL_WEIGHTS], true);
+        }
+        $this->rule = boolval($data[self::COL_RULE]);
 
         return $this;
     }
@@ -125,8 +145,8 @@ class Play extends BaseTemplate2
         if ($this->count < 0) {
             throw new ErrorException('"count" should be positive!');
         }
-        if (empty($this->weights)) {
-            throw new ErrorException('"weights" should be empty!');
+        if (!$this->rule && empty($this->weights)) {
+            throw new ErrorException('"weights" should not be empty!');
         }
 
         parent::beforePost();

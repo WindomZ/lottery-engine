@@ -12,7 +12,6 @@ abstract class BaseTemplate1 extends BaseId
 {
     const COL_NAME = 'name';
     const COL_ACTIVE = 'active';
-    const COL_LEVEL = 'level';
 
     /**
      * @var string
@@ -25,11 +24,6 @@ abstract class BaseTemplate1 extends BaseId
     public $active = true;
 
     /**
-     * @var int
-     */
-    public $level = 0;
-
-    /**
      * @return array
      */
     protected function toArray(): array
@@ -39,7 +33,6 @@ abstract class BaseTemplate1 extends BaseId
             [
                 self::COL_NAME => $this->name,
                 self::COL_ACTIVE => $this->active,
-                self::COL_LEVEL => $this->level,
             ]
         );
     }
@@ -54,7 +47,6 @@ abstract class BaseTemplate1 extends BaseId
 
         $this->name = $data[self::COL_NAME];
         $this->active = boolval($data[self::COL_ACTIVE]);
-        $this->level = intval($data[self::COL_LEVEL]);
 
         return $this;
     }

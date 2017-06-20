@@ -31,6 +31,7 @@ class Config extends \Noodlehaus\Config
             'database_command' => [
                 'SET SQL_MODE=ANSI_QUOTES',
             ],
+            'database_json' => true,
         ];
     }
 }
