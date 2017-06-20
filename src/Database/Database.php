@@ -12,6 +12,19 @@ use Medoo\Medoo;
 class Database extends Medoo
 {
     /**
+     * @var bool
+     */
+    private $supportJSON = false;
+
+    /**
+     * @return bool
+     */
+    public function getSupportJSON()
+    {
+        return $this->supportJSON;
+    }
+
+    /**
      * Database constructor.
      * @param Config $config
      */
@@ -32,6 +45,8 @@ class Database extends Medoo
                 'command' => $config->get('database.command'),
             ]
         );
+
+        $this->supportJSON = boolval($config->get('database_json'));
     }
 
     /**
