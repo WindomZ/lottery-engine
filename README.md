@@ -1,6 +1,6 @@
 # lottery-engine
 
-> A lottery component engine - fast, modularity and easy to deploy.
+> A lottery component engine - modularity and easy to deploy.
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/windomz/lottery-engine.svg?style=flat-square)](https://packagist.org/packages/windomz/lottery-engine)
 [![Build Status](https://img.shields.io/travis/WindomZ/lottery-engine/master.svg?style=flat-square)](https://travis-ci.org/WindomZ/lottery-engine)
@@ -10,6 +10,7 @@
 ## Feature
 
 - [x] Play
+- [x] Rule
 - [x] Reward
 - [x] Record
 

@@ -1,7 +1,5 @@
 # lottery-engine
 
-> 开发中...
-
 ## 当前版本
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/windomz/lottery-engine.svg?style=flat-square)](https://packagist.org/packages/windomz/lottery-engine)
@@ -79,12 +77,23 @@ Lottery::setConfigPath('./config.yml');
 |bool|active|N|Y|是否生效|
 |string|level|N|Y|级别|
 |string|desc|N|Y|描述|
-|string|rule|N|Y|玩法规则|
 |bool|daily|Y|Y|每日活动|
 |int|limit|Y|Y|用户次数限制(每日活动或总次数)|
 |int|size|Y|Y|参与活动总数|
 |int|count|N|N|参与活动次数|
-|json|weights|Y|Y|奖品权重|
+|json|weights|Y|Y|奖品权重(若不支持json则开启'rule')|
+|bool|rule|N|Y|是否开启玩法规则(`Rule`)|
+
+#### 玩法规则(`Rule`)
+
+|类型|字段|必填|修改|描述|
+|---|---|:---:|:---:|---|
+|string|id|N|N|UUID|
+|string|post_time|N|N|创建时间|
+|string|put_time|N|N|修改时间|
+|string|play_id|Y|N|玩法UUID|
+|string|reward_id|Y|N|奖品UUID|
+|int|weight|Y|Y|奖品权重|
 
 #### 记录(`Record`)
 
