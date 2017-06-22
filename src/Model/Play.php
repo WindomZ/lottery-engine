@@ -227,12 +227,15 @@ class Play extends DbPlay
 
         Lock::synchronized(
             function () use ($activity, $record) {
-                return $activity->refresh() && $activity->pass() && ($activity->playCount($record->user_id) > 0);
+                return $activity->refresh() && $activity->pass();
             },
             function () use ($activity, $record) {
                 $reward = Reward::object($record->reward_id);
 
-                $record->winning = $reward->refresh() && $reward->pass();
+                $record->winning = $activity->playCount($record->user_id) > 0;
+                if ($record->winning) {
+                    $record->winning = $reward->refresh() && $reward->pass();
+                }
                 if ($record->winning) {
                     $record->winning = $activity->increase($activity::COL_COUNT);
                 }
