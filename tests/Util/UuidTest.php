@@ -16,10 +16,10 @@ class UuidTest extends TestCase
      */
     public function testUuid()
     {
-        $this->assertTrue(Uuid::isValid(Uuid::uuid()));
+        self::assertTrue(Uuid::isValid(Uuid::uuid()));
 
-        $this->assertTrue(Uuid::isValid('00000000-0000-0000-0000-000000000000'));
-        $this->assertTrue(Uuid::isValid('00000000-0000-0000-0000-000000000001'));
-        $this->assertTrue(Uuid::isValid('00000000-0000-0000-0000-000000000002'));
+        self::assertTrue(Uuid::isValid('00000000-0000-0000-0000-000000000000'));
+        self::assertTrue(Uuid::isValid('00000000-0000-0000-0000-000000000001'));
+        self::assertTrue(Uuid::isValid('00000000-0000-0000-0000-000000000002'));
     }
 }

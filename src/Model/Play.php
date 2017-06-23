@@ -200,10 +200,11 @@ class Play extends DbPlay
 
     /**
      * @param string $user_id
+     * @param callable|null $callback
      * @return string
      * @throws ErrorException
      */
-    public function play(string $user_id): string
+    public function play(string $user_id, callable $callback = null): string
     {
         if (!Uuid::isValid($user_id)) {
             throw new ErrorException('"user_id" should be UUID: '.$user_id);
@@ -219,6 +220,10 @@ class Play extends DbPlay
         }
 
         if ($id === Reward::ID_AGAIN) {
+            if (is_callable($callback)) {
+                $callback(Record::ID_AGAIN);
+            }
+
             return Record::ID_AGAIN;
         }
 
@@ -226,21 +231,27 @@ class Play extends DbPlay
         $record = Record::create($user_id, $this->id, $id);
 
         Lock::synchronized(
-            function () use ($activity, $record) {
-                return $activity->refresh() && $activity->pass() && ($activity->playCount($record->user_id) > 0);
-            },
-            function () use ($activity, $record) {
-                $reward = Reward::object($record->reward_id);
+            function () use ($activity, $record, $callback) {
+                if ($activity->refresh() && $activity->pass()) {
+                    $reward = Reward::object($record->reward_id);
 
-                $record->winning = $reward->refresh() && $reward->pass();
-                if ($record->winning) {
-                    $record->winning = $activity->increase($activity::COL_COUNT);
-                }
-                if ($record->winning) {
-                    $record->winning = $reward->increase($reward::COL_COUNT);
+                    $record->winning = $activity->playCount($record->user_id) > 0;
+                    if ($record->winning) {
+                        $record->winning = $reward->refresh() && $reward->pass();
+                    }
+                    if ($record->winning) {
+                        $record->winning = $activity->increase($activity::COL_COUNT);
+                    }
+                    if ($record->winning) {
+                        $record->winning = $reward->increase($reward::COL_COUNT);
+                    }
+
+                    $record->post();
                 }
 
-                $record->post();
+                if (is_callable($callback)) {
+                    $callback($record);
+                }
             }
         );
 
