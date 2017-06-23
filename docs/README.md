@@ -221,7 +221,12 @@ Lottery::setConfigPath('./config.yml');
 
 #### 公共方法
 
-- *::toJSON($obj)
+- *->toJSON()
+  - @description 转为JSON格式对象
+  - @demo `$obj->toJSON()`
+  - @return object
+
+- *::obj2JSON($obj)
   - @description 转为JSON格式对象
   - @demo `Play::toJSON(Play::get('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'))`
   - @param
