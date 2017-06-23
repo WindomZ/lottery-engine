@@ -121,16 +121,38 @@ class ModelTest extends TestCase
         self::assertNotEmpty($play);
 
         $user_id = Uuid::uuid();
+        $count = 0;
 
-        $recordId1 = $play->play($user_id);
+        $recordId1 = $play->play(
+            $user_id,
+            function ($record) use (&$count) {
+                self::assertNotEmpty($record);
+                $count++;
+            }
+        );
         self::assertNotEmpty($recordId1);
-        $recordId2 = $play->play($user_id);
+        $recordId2 = $play->play(
+            $user_id,
+            function ($record) use (&$count) {
+                self::assertNotEmpty($record);
+                $count++;
+            }
+        );
         self::assertNotEmpty($recordId2);
-        $recordId3 = $play->play($user_id);
+        $recordId3 = $play->play(
+            $user_id,
+            function ($record) use (&$count) {
+                self::assertNotEmpty($record);
+                $count++;
+            }
+        );
         self::assertNotEmpty($recordId3);
 
         self::assertTrue(Record::object($recordId1)->winning);
         self::assertTrue(Record::object($recordId2)->winning);
         self::assertTrue(Record::object($recordId3)->winning);
+
+        sleep(1);
+        self::assertEquals($count, 3);
     }
 }
