@@ -4,7 +4,8 @@ CREATE SCHEMA lotterydb CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 create table lotterydb.le_play
 (
-	id char(36) not null,
+	id char(36) not null
+		primary key,
 	post_time datetime default CURRENT_TIMESTAMP not null,
 	put_time datetime default CURRENT_TIMESTAMP not null,
 	name varchar(32) default '' not null,
@@ -28,7 +29,8 @@ create index le_play_name_active_index
 
 create table lotterydb.le_record
 (
-	id char(36) not null,
+	id char(36) not null
+		primary key,
 	post_time datetime default CURRENT_TIMESTAMP not null,
 	put_time datetime default CURRENT_TIMESTAMP not null,
 	user_id char(36) not null,
@@ -58,7 +60,8 @@ create index le_record_play_id_reward_id_index
 
 create table lotterydb.le_reward
 (
-	id char(36) not null,
+	id char(36) not null
+		primary key,
 	post_time datetime default CURRENT_TIMESTAMP not null,
 	put_time datetime default CURRENT_TIMESTAMP not null,
 	name varchar(32) default '' not null,
@@ -89,7 +92,8 @@ create index le_reward_award_class_award_kind_index
 
 create table lotterydb.le_rule
 (
-	id char(36) not null,
+	id char(36) not null
+		primary key,
 	post_time datetime default CURRENT_TIMESTAMP not null,
 	put_time datetime default CURRENT_TIMESTAMP not null,
 	play_id char(36) not null,
