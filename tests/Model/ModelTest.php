@@ -31,16 +31,16 @@ class ModelTest extends TestCase
             $reward->level = 1;
 
             try {
-                $this->assertFalse($reward->post());
+                self::assertFalse($reward->post());
             } catch (ErrorException $err) {
-                $this->assertNotEmpty($err);
+                self::assertNotEmpty($err);
             }
 
             $reward->name = 'name';
             $reward->desc = 'desc';
             $reward->size = 6;
 
-            $this->assertTrue($reward->post());
+            self::assertTrue($reward->post());
         } else {
             $reward = $list[Reward::ARG_DATA][0];
         }
@@ -58,7 +58,7 @@ class ModelTest extends TestCase
      */
     public function testPutReward(Reward $reward)
     {
-        $this->assertTrue($reward->put('*'));
+        self::assertTrue($reward->put('*'));
 
         return $reward;
     }
@@ -71,7 +71,7 @@ class ModelTest extends TestCase
      */
     public function testPostPlay(Reward $reward)
     {
-        $this->assertNotEmpty($reward);
+        self::assertNotEmpty($reward);
 
         $play = null;
 
@@ -89,7 +89,7 @@ class ModelTest extends TestCase
             $play->setReward(Reward::ID_NULL, 20);
             $play->setReward(Reward::ID_AGAIN, 30);
 
-            $this->assertTrue($play->post());
+            self::assertTrue($play->post());
         } else {
             $play = $list[Play::ARG_DATA][0];
         }
@@ -107,7 +107,7 @@ class ModelTest extends TestCase
      */
     public function testPutPlay(Play $play)
     {
-        $this->assertTrue($play->put('*'));
+        self::assertTrue($play->put('*'));
 
         return $play;
     }
@@ -118,19 +118,19 @@ class ModelTest extends TestCase
      */
     public function testPlay(Play $play)
     {
-        $this->assertNotEmpty($play);
+        self::assertNotEmpty($play);
 
         $user_id = Uuid::uuid();
 
         $recordId1 = $play->play($user_id);
-        $this->assertNotEmpty($recordId1);
+        self::assertNotEmpty($recordId1);
         $recordId2 = $play->play($user_id);
-        $this->assertNotEmpty($recordId2);
+        self::assertNotEmpty($recordId2);
         $recordId3 = $play->play($user_id);
-        $this->assertNotEmpty($recordId3);
+        self::assertNotEmpty($recordId3);
 
-        $this->assertTrue(Record::object($recordId1)->winning);
-        $this->assertTrue(Record::object($recordId2)->winning);
-        $this->assertTrue(Record::object($recordId3)->winning);
+        self::assertTrue(Record::object($recordId1)->winning);
+        self::assertTrue(Record::object($recordId2)->winning);
+        self::assertTrue(Record::object($recordId3)->winning);
     }
 }

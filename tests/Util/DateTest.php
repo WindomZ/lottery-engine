@@ -16,8 +16,8 @@ class DateTest extends TestCase
      */
     public function test_get_time_stamp()
     {
-        $this->assertNotEmpty(Date::get_now_time_stamp());
-        $this->assertEquals(Date::get_now_time_stamp(), time());
+        self::assertNotEmpty(Date::get_now_time_stamp());
+        self::assertEquals(Date::get_now_time_stamp(), time());
     }
 
     /**
@@ -25,18 +25,18 @@ class DateTest extends TestCase
      */
     public function test_get_time()
     {
-        $this->assertEquals(gettype(Date::get_now_time()), 'string');
+        self::assertEquals(gettype(Date::get_now_time()), 'string');
 
-        $this->assertEquals(
+        self::assertEquals(
             substr(Date::get_next_time(), 0, 10),
             substr(Date::get_next_zero_time(), 0, 10)
         );
-        $this->assertEquals(
+        self::assertEquals(
             substr(Date::get_next_time(86400), 0, 10),
             substr(Date::get_next_zero_time(86400), 0, 10)
         );
 
-        $this->assertEquals(substr(Date::get_next_zero_time(), 11, 8), '00:00:00');
+        self::assertEquals(substr(Date::get_next_zero_time(), 11, 8), '00:00:00');
     }
 
     /**
@@ -44,8 +44,8 @@ class DateTest extends TestCase
      */
     public function test_before()
     {
-        $this->assertTrue(Date::before(Date::get_next_time(-1)));
-        $this->assertTrue(Date::before(Date::get_next_time(-1), Date::get_next_time()));
+        self::assertTrue(Date::before(Date::get_next_time(-1)));
+        self::assertTrue(Date::before(Date::get_next_time(-1), Date::get_next_time()));
     }
 
     /**
@@ -53,7 +53,7 @@ class DateTest extends TestCase
      */
     public function test_after()
     {
-        $this->assertTrue(Date::after(Date::get_next_time(1)));
-        $this->assertTrue(Date::after(Date::get_next_time(1), Date::get_next_time()));
+        self::assertTrue(Date::after(Date::get_next_time(1)));
+        self::assertTrue(Date::after(Date::get_next_time(1), Date::get_next_time()));
     }
 }

@@ -20,7 +20,7 @@ class LotteryTest extends TestCase
         Lottery::setConfigPath('./tests/Config/config.yml');
         $lottery = Lottery::getInstance();
 
-        $this->assertNotEmpty($lottery);
+        self::assertNotEmpty($lottery);
 
         return $lottery;
     }
@@ -32,7 +32,7 @@ class LotteryTest extends TestCase
      */
     public function testLotteryConfig(Lottery $lottery)
     {
-        $this->assertNotEmpty($lottery);
+        self::assertNotEmpty($lottery);
 
         self::assertEquals($lottery->getConfig()->get('database_host'), '127.0.0.1');
         self::assertEquals($lottery->getConfig()->get('database_port'), 3306);
