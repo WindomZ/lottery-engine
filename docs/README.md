@@ -190,10 +190,11 @@ Lottery::setConfigPath('./config.yml');
     - string $user_id 用户UUID
   - @return int
 
-- Play->play($user_id)
+- Play->play($user_id, $callback = null)
   - @description 进行抽奖玩法(`Play`)
   - @param
     - string $user_id 用户UUID
+    - callable $callback 回调记录(`Record`)
   - @return string 记录UUID，前端需延迟处理，10秒后查询不到检查`playCount`
 
 #### 记录(`Record`)
