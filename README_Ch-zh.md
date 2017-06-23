@@ -1,29 +1,29 @@
 # lottery-engine
 
-> A lottery component engine - modularity and easy to deploy.
+> 一个抽奖组件引擎 - 模块化且易部署
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/windomz/lottery-engine.svg?style=flat-square)](https://packagist.org/packages/windomz/lottery-engine)
 [![Build Status](https://img.shields.io/travis/WindomZ/lottery-engine/master.svg?style=flat-square)](https://travis-ci.org/WindomZ/lottery-engine)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.0-8892BF.svg?style=flat-square)](https://php.net/)
 [![Minimum MYSQL Version](https://img.shields.io/badge/mysql-%3E%3D%205.6-4479a1.svg?style=flat-square)](https://www.mysql.com/)
 
-[中文文档](https://github.com/WindomZ/lottery-engine/blob/master/README_Ch-zh.md#readme)
+[English](https://github.com/WindomZ/lottery-engine/blob/master/README.md#readme)
 
-## Feature
+## 特性
 
-- [x] Play
-- [x] Rule
-- [x] Reward
-- [x] Record
+- [x] 玩法
+- [x] 玩法规则
+- [x] 奖品
+- [x] 记录
 
-## Installation
+## 安装
 
-Open the terminal in the project directory:
+在项目目录中打开终端：
 ```bash
 $ composer require windomz/lottery-engine
 ```
 
-Create a configuration file, like `config.yml`:
+创建一个配置文件，比如`config.yml`：
 ```yaml
 database_host: 127.0.0.1
 database_port: 3306
@@ -31,24 +31,25 @@ database_type: mysql
 database_name: lotterydb
 database_username: root
 database_password: root
+database_logging: true
 ```
 
-If only for quick testing, 
-you can run `./sql/lotterydb.sql` in `MySQL` to quickly create a test database.
+如果仅用于快速测试，
+您可以在`MySQL`中运行`./sql/lotterydb.sql`来快速创建一个测试数据库。
 
-Of course, you can also customize the `database name` based on `./sql/lotterydb.sql`, 
-but note that the `table name` _CANNOT MODIFY_!
+当然，您也可以根据`./sql/lotterydb.sql`自定义`database name`，
+但是请注意`table name`_不能改动_！
 
-In the project initialization, 
-load the specified configuration file through the following implementation:
+在项目初始化代码中，
+通过以下实现加载指定的配置文件：
 ```php
 Lottery::setConfigPath('./config.yml');
 ```
 
-## Usage
+## 用法
 
-Refer to the [Document](https://windomz.github.io/lottery-engine)(_Currently only Chinese_) for details.
+有关详细信息，请参阅[文档](https://windomz.github.io/lottery-engine)。
 
-## License
+## 许可
 
 The [MIT License](https://github.com/WindomZ/lottery-engine/blob/master/LICENSE)
