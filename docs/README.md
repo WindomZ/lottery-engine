@@ -105,7 +105,7 @@ Lottery::setConfigPath('./config.yml');
 |string|user_id|Y|N|用户UUID|
 |string|play_id|Y|N|玩法UUID|
 |string|reward_id|Y|N|奖品UUID|
-|bool|winning|N|N|是否成功(计入抽奖)|
+|bool|winning|N|N|是否中奖|
 
 ### 接口方法
 

@@ -245,6 +245,9 @@ class Play extends DbPlay
                     if ($record->winning) {
                         $record->winning = $reward->increase($reward::COL_COUNT);
                     }
+                    if ($record->winning && $record->reward_id === Reward::ID_NULL) {
+                        $record->winning = false;
+                    }
 
                     $record->post();
                 }
