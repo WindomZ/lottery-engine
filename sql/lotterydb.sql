@@ -96,6 +96,8 @@ create table lotterydb.le_rule
 		primary key,
 	post_time datetime default CURRENT_TIMESTAMP not null,
 	put_time datetime default CURRENT_TIMESTAMP not null,
+	name varchar(32) default '' not null,
+	active tinyint(1) default '1' not null,
 	play_id char(36) not null,
 	reward_id char(36) not null,
 	weight int default '0' not null,

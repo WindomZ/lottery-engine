@@ -1,6 +1,6 @@
 {
     "name": "windomz/lottery-engine",
-    "description": "",
+    "description": "A lottery component engine - modularity and easy to deploy.",
     "keywords": ["lottery", "engine"],
     "type": "library",
     "require": {
@@ -16,7 +16,7 @@
         "jakub-onderka/php-parallel-lint": "^0.9.2",
         "jakub-onderka/php-console-highlighter": "^0.3.2"
     },
-    "license": "Apache-2.0",
+    "license": "MIT",
     "authors": [
         {
             "name": "WindomZ",
