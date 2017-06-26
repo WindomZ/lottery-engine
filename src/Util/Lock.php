@@ -21,7 +21,7 @@ class Lock
     private static function mutex()
     {
         if (!self::$mutex) {
-            self::$mutex = new FlockMutex(fopen(__FILE__, "r"));
+            self::$mutex = new FlockMutex(fopen(dirname(__FILE__).'/Lock', "r"));
         }
 
         return self::$mutex;

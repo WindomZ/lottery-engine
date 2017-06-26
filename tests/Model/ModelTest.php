@@ -120,18 +120,18 @@ class ModelTest extends TestCase
     {
         self::assertNotEmpty($play);
 
+        $SIZE = 20;
         $user_id = Uuid::uuid();
         $recordIds = array();
         $count = 0;
         $count_win = 0;
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < $SIZE; $i++) {
             $recordId = $play->play(
                 $user_id,
                 function ($err, Record $record) use (&$count, &$count_win) {
                     if (isset($err)) {
-                        var_dump($err);
-                        self::assertEmpty($err);
+                        self::assertEmpty($err, (string)$err);
                     }
                     self::assertNotEmpty($record);
                     $count++;
@@ -144,16 +144,18 @@ class ModelTest extends TestCase
             array_push($recordIds, $recordId);
         }
 
-        for ($i = 0; $i < 10; $i++) {
+        sleep(1);
+        self::assertEquals($count, $SIZE);
+
+        for ($i = 0; $i < $SIZE; $i++) {
             $record = Record::object($recordIds[$i]);
             self::assertNotEmpty($record);
-            self::assertTrue(!$record->isWinning() || $record->winning);
-            self::assertTrue(!$record->isWinning() || $record->putRelated($user_id));
+            if ($record->isWinning()) {
+                self::assertTrue($record->putRelated($user_id));
+                $count_win--;
+            }
         }
 
-        sleep(1);
-        self::assertEquals($count, 10);
-
-        var_dump($count_win);
+        self::assertEmpty($count_win);
     }
 }
