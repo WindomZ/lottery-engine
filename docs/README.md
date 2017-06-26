@@ -198,8 +198,8 @@ Lottery::setConfigPath('./config.yml');
   - @description 进行抽奖玩法(`Play`)
   - @param
     - string $user_id 用户UUID
-    - callable $callback 回调记录(`Record`)
-  - @return string 记录UUID，便于前端处理和追踪
+    - callable $callback($err, Record $record) 回调系统确认的记录(`Record`)
+  - @return string 记录UUID，系统未确认，便于后续的追踪
 
 #### 记录(`Record`)
 
