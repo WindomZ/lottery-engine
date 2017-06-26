@@ -23,7 +23,7 @@ class ModelTest extends TestCase
     {
         $reward = null;
 
-        $list = Reward::list([Reward::COL_NAME => 'name'], 10, 0);
+        $list = Reward::list([Reward::COL_NAME => '这是名称name'], 10, 0);
         if (!$list || !$list[Reward::ARG_SIZE]) {
             $reward = new Reward();
 
@@ -36,8 +36,8 @@ class ModelTest extends TestCase
                 self::assertNotEmpty($err);
             }
 
-            $reward->name = 'name';
-            $reward->desc = 'desc';
+            $reward->name = '这是名称name';
+            $reward->desc = '这是描述desc';
             $reward->size = 6;
 
             self::assertTrue($reward->post());
@@ -75,12 +75,12 @@ class ModelTest extends TestCase
 
         $play = null;
 
-        $list = Play::list([Play::COL_NAME => 'name'], 10, 0);
+        $list = Play::list([Play::COL_NAME => '这是名称name'], 10, 0);
         if (!$list || !$list[Play::ARG_SIZE]) {
             $play = new Play();
 
-            $play->name = 'name';
-            $play->desc = 'desc';
+            $play->name = '这是名称name';
+            $play->desc = '这是描述desc';
             $play->daily = true;
             $play->limit = 3;
             $play->size = 6;
