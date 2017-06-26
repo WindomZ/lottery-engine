@@ -107,6 +107,7 @@ Lottery::setConfigPath('./config.yml');
 |string|user_id|Y|N|用户UUID|
 |string|play_id|Y|N|玩法UUID|
 |string|reward_id|Y|N|奖品UUID|
+|string|related_id|N|Y|关联外部UUID(可选)|
 |bool|winning|N|N|是否中奖|
 |bool|passing|N|N|是否生效|
 
@@ -216,6 +217,16 @@ Lottery::setConfigPath('./config.yml');
     - int $page 筛选页数
     - array $order 筛选排序
   - @return array
+
+- Record->isWinning()
+  - @description 是否中奖
+  - @return bool
+
+- Record->putRelated($related_id)
+  - @description 设置关联外部UUID
+  - @param
+    - string $related_id 关联外部UUID
+  - @return bool
 
 - Record::ID_NULL
   - @description 默认的记录UUID - 空记录(预留)
