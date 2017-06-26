@@ -45,8 +45,16 @@ class Reward extends DbReward
         if ($id) {
             switch ($id) {
                 case self::ID_NULL:
+                    $obj->id = $id;
+                    $obj->name = 'Not winning';
+                    $obj->active = true;
+                    $obj->fake = true;
+
+                    return $obj;
                 case self::ID_AGAIN:
                     $obj->id = $id;
+                    $obj->name = 'Try again';
+                    $obj->active = true;
                     $obj->fake = true;
 
                     return $obj;

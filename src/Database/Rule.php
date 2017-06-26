@@ -9,7 +9,7 @@ use LotteryEngine\Util\Uuid;
  * Class Rule
  * @package LotteryEngine\Database
  */
-class Rule extends BaseId
+class Rule extends BaseTemplate1
 {
     const COL_PLAY_ID = 'play_id';
     const COL_REWARD_ID = 'reward_id';

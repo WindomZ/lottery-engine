@@ -148,9 +148,17 @@ class ModelTest extends TestCase
         );
         self::assertNotEmpty($recordId3);
 
-        self::assertTrue(Record::object($recordId1)->winning);
-        self::assertTrue(Record::object($recordId2)->winning);
-        self::assertTrue(Record::object($recordId3)->winning);
+        $record1 = Record::object($recordId1);
+        self::assertNotEmpty($record1);
+        self::assertTrue($record1->id !== Reward::ID_NULL || $record1->winning);
+
+        $record2 = Record::object($recordId2);
+        self::assertNotEmpty($record2);
+        self::assertTrue($record2->id !== Reward::ID_NULL || $record2->winning);
+
+        $record3 = Record::object($recordId3);
+        self::assertNotEmpty($record3);
+        self::assertTrue($record3->id !== Reward::ID_NULL || $record3->winning);
 
         sleep(1);
         self::assertEquals($count, 3);

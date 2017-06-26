@@ -57,6 +57,10 @@ class Rule extends DbRule
         if (!Uuid::isValid($reward_id)) {
             throw new ErrorException('"reward_id" should be UUID: '.$reward_id);
         }
+        $reward = Reward::object($reward_id);
+        if (empty($reward)) {
+            throw new ErrorException('"reward_id" should be existed: '.$reward_id);
+        }
         if ($weight < 0) {
             $weight = 0;
         }
@@ -65,6 +69,8 @@ class Rule extends DbRule
 
         $obj->play_id = $play_id;
         $obj->reward_id = $reward_id;
+        $obj->name = $reward->name;
+        $obj->active = $reward->active;
         $obj->weight = $weight;
 
         return $obj;
