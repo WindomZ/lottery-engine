@@ -15,6 +15,7 @@ class Record extends BaseId
     const COL_PLAY_ID = 'play_id';
     const COL_REWARD_ID = 'reward_id';
     const COL_WINNING = 'winning';
+    const COL_PASSING = 'passing';
 
     /**
      * @var string
@@ -35,6 +36,11 @@ class Record extends BaseId
      * @var bool
      */
     public $winning = false;
+
+    /**
+     * @var bool
+     */
+    public $passing = true;
 
     /**
      * @return Record
@@ -64,6 +70,7 @@ class Record extends BaseId
                 self::COL_PLAY_ID => $this->play_id,
                 self::COL_REWARD_ID => $this->reward_id,
                 self::COL_WINNING => $this->winning,
+                self::COL_PASSING => $this->passing,
             ]
         );
     }
@@ -80,6 +87,7 @@ class Record extends BaseId
         $this->play_id = $data[self::COL_PLAY_ID];
         $this->reward_id = $data[self::COL_REWARD_ID];
         $this->winning = boolval($data[self::COL_WINNING]);
+        $this->passing = boolval($data[self::COL_PASSING]);
 
         return $this;
     }

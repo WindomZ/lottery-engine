@@ -226,6 +226,7 @@ class Play extends DbPlay
                     }
                 } else {
                     $record->winning = false;
+                    $record->passing = false;
                 }
                 $record->post();
 
