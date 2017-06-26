@@ -36,7 +36,8 @@ create table lotterydb.le_record
 	user_id char(36) not null,
 	play_id char(36) not null,
 	reward_id char(36) not null,
-	winning tinyint(1) default '1' not null,
+	winning tinyint(1) default '0' not null,
+	passing tinyint(1) default '1' not null,
 	constraint le_record_id_uindex
 		unique (id)
 )
