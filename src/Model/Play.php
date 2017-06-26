@@ -199,7 +199,7 @@ class Play extends DbPlay
 
         if ($id === Reward::ID_AGAIN) {
             if (is_callable($callback)) {
-                $callback($record);
+                $callback(null, $record);
             }
 
             return Record::ID_AGAIN;
@@ -209,22 +209,28 @@ class Play extends DbPlay
 
         Lock::synchronized(
             function () use ($activity, $record, $callback) {
-                if ($activity->refresh() && $activity->pass()) {
-                    $reward = Reward::object($record->reward_id);
+                try {
+                    if ($activity->refresh() && $activity->pass()) {
+                        $reward = Reward::object($record->reward_id);
 
-                    $record->winning = ($activity->playCount($record->user_id) > 0)
-                        && $reward->refresh() && $reward->pass()
-                        && $activity->increase($activity::COL_COUNT)
-                        && $reward->increase($reward::COL_COUNT)
-                        && ($record->reward_id !== Reward::ID_NULL);
-                } else {
-                    $record->winning = false;
-                    $record->passing = false;
-                }
-                $record->post();
+                        $record->winning = ($activity->playCount($record->user_id) > 0)
+                            && $reward->refresh() && $reward->pass()
+                            && $activity->increase($activity::COL_COUNT)
+                            && $reward->increase($reward::COL_COUNT)
+                            && ($record->reward_id !== Reward::ID_NULL);
+                    } else {
+                        $record->winning = false;
+                        $record->passing = false;
+                    }
+                    $record->post();
 
-                if (is_callable($callback)) {
-                    $callback($record);
+                    if (is_callable($callback)) {
+                        $callback(null, $record);
+                    }
+                } catch (\Exception $err) {
+                    if (is_callable($callback)) {
+                        $callback($err, $record);
+                    }
                 }
             }
         );

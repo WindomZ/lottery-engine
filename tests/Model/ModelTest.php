@@ -121,49 +121,39 @@ class ModelTest extends TestCase
         self::assertNotEmpty($play);
 
         $user_id = Uuid::uuid();
+        $recordIds = array();
         $count = 0;
+        $count_win = 0;
 
-        $recordId1 = $play->play(
-            $user_id,
-            function ($record) use (&$count) {
-                self::assertNotEmpty($record);
-                $count++;
-            }
-        );
-        self::assertNotEmpty($recordId1);
-        $recordId2 = $play->play(
-            $user_id,
-            function ($record) use (&$count) {
-                self::assertNotEmpty($record);
-                $count++;
-            }
-        );
-        self::assertNotEmpty($recordId2);
-        $recordId3 = $play->play(
-            $user_id,
-            function ($record) use (&$count) {
-                self::assertNotEmpty($record);
-                $count++;
-            }
-        );
-        self::assertNotEmpty($recordId3);
+        for ($i = 0; $i < 10; $i++) {
+            $recordId = $play->play(
+                $user_id,
+                function ($err, Record $record) use (&$count, &$count_win) {
+                    if (isset($err)) {
+                        var_dump($err);
+                        self::assertEmpty($err);
+                    }
+                    self::assertNotEmpty($record);
+                    $count++;
+                    if ($record->isWinning()) {
+                        $count_win++;
+                    }
+                }
+            );
+            self::assertNotEmpty($recordId);
+            array_push($recordIds, $recordId);
+        }
 
-        $record1 = Record::object($recordId1);
-        self::assertNotEmpty($record1);
-        self::assertTrue(!$record1->isWinning() || $record1->winning);
-        self::assertTrue(!$record1->isWinning() || $record1->putRelated($user_id));
-
-        $record2 = Record::object($recordId2);
-        self::assertNotEmpty($record2);
-        self::assertTrue(!$record2->isWinning() || $record2->winning);
-        self::assertTrue(!$record2->isWinning() || $record2->putRelated($user_id));
-
-        $record3 = Record::object($recordId3);
-        self::assertNotEmpty($record3);
-        self::assertTrue(!$record3->isWinning() || $record3->winning);
-        self::assertTrue(!$record3->isWinning() || $record3->putRelated($user_id));
+        for ($i = 0; $i < 10; $i++) {
+            $record = Record::object($recordIds[$i]);
+            self::assertNotEmpty($record);
+            self::assertTrue(!$record->isWinning() || $record->winning);
+            self::assertTrue(!$record->isWinning() || $record->putRelated($user_id));
+        }
 
         sleep(1);
-        self::assertEquals($count, 3);
+        self::assertEquals($count, 10);
+
+        var_dump($count_win);
     }
 }
