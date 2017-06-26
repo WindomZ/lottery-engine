@@ -65,11 +65,7 @@ class Play extends DbPlay
             if (!Uuid::isValid($this->id)) {
                 $this->id = Uuid::uuid();
             }
-            foreach ($this->weights as $r => $w) {
-                if (!Rule::create($this->id, $r, $w)->post()) {
-                    throw new ErrorException('Fail to add play rule!');
-                }
-            }
+            Rule::postByPlay($this);
         }
 
         return parent::post();
@@ -84,31 +80,11 @@ class Play extends DbPlay
     public function put($columns, array $where = []): bool
     {
         if ($this->rule) {
-            if (gettype($columns) === 'string' || array_key_exists($this::COL_WEIGHTS, $columns)) {
-                $list = Rule::rules($this->id);
-                if (!empty($list)) {
-                    foreach ($this->weights as $r => $w) {
-                        $create = true;
-                        foreach ($list as $l) {
-                            if ($l instanceof Rule && $l->reward_id === $r) {
-                                if ($l->weight !== $w) {
-                                    $l->weight = $w;
-                                    if (!$l->put([Rule::COL_WEIGHT])) {
-                                        throw new ErrorException('Fail to put play rule!');
-                                    }
-                                }
-                                $create = false;
-                                break;
-                            }
-                        }
-                        if ($create) {
-                            $obj = Rule::create($this->id, $r, $w);
-                            if (!$obj->post()) {
-                                throw new ErrorException('Fail to post new play rule!');
-                            }
-                        }
-                    }
-                }
+            if (is_string($columns)) {
+                Rule::putByPlay($this);
+            } elseif (is_array($columns) && array_key_exists(self::COL_WEIGHTS, $columns)) {
+                Rule::putByPlay($this);
+                $columns = array_diff($columns, [self::COL_WEIGHTS]);
             }
         }
 
@@ -146,7 +122,7 @@ class Play extends DbPlay
             $this->weights = Rule::weights($this->id);
         }
         foreach ($this->weights as $weight) {
-            if (gettype($weight) === 'integer') {
+            if (is_integer($weight)) {
                 $sum += $weight;
             }
         }
@@ -154,7 +130,7 @@ class Play extends DbPlay
         if ($sum > 0) {
             $index = mt_rand(0, $sum);
             foreach ($this->weights as $reward_id => $weight) {
-                if (gettype($weight) === 'integer') {
+                if (is_integer($weight)) {
                     $index -= $weight;
                 }
                 if ($index <= 0) {
@@ -248,9 +224,10 @@ class Play extends DbPlay
                     if ($record->winning && $record->reward_id === Reward::ID_NULL) {
                         $record->winning = false;
                     }
-
-                    $record->post();
+                } else {
+                    $record->winning = false;
                 }
+                $record->post();
 
                 if (is_callable($callback)) {
                     $callback($record);
