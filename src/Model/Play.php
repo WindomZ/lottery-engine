@@ -229,6 +229,10 @@ class Play extends DbPlay
             }
         );
 
+        if ($id === Reward::ID_NULL) {
+            return Record::ID_NULL;
+        }
+
         return $record->id;
     }
 }
