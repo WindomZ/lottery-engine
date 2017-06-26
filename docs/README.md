@@ -91,6 +91,8 @@ Lottery::setConfigPath('./config.yml');
 |string|id|N|N|UUID|
 |string|post_time|N|N|创建时间|
 |string|put_time|N|N|修改时间|
+|string|name|Y|Y|名称|
+|bool|active|N|Y|是否生效|
 |string|play_id|Y|N|玩法UUID|
 |string|reward_id|Y|N|奖品UUID|
 |int|weight|Y|Y|奖品权重|
