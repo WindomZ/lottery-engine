@@ -31,7 +31,9 @@ database_type: mysql
 database_name: lotterydb
 database_username: root
 database_password: root
-database_logging: true
+database_charset: utf8
+database_logging: false
+database_json: true # 是否支持json字段
 ```
 
 如果仅用于快速测试，

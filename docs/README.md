@@ -28,6 +28,9 @@ database_type: mysql
 database_name: lotterydb
 database_username: root
 database_password: root
+database_charset: utf8
+database_logging: false
+database_json: true # 是否支持json字段
 ```
 
 如果只是作为测试，可以在`MySQL`运行`./sql/lotterydb.sql`来快速创建测试数据库。

@@ -31,6 +31,8 @@ database_type: mysql
 database_name: lotterydb
 database_username: root
 database_password: root
+database_charset: utf8
+database_logging: false
 database_json: true # If the database supports JSON.
 ```
 
