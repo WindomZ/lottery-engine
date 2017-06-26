@@ -12,8 +12,8 @@ use LotteryEngine\Util\Uuid;
  */
 class Record extends DbRecord
 {
-    const ID_NULL = '00000000-0000-0000-0000-000000000001';
-    const ID_AGAIN = '00000000-0000-0000-0000-000000000002';
+    const ID_NULL = Reward::ID_NULL;
+    const ID_AGAIN = Reward::ID_AGAIN;
 
     /**
      * Record constructor.

@@ -77,6 +77,57 @@ class Rule extends DbRule
     }
 
     /**
+     * @param Play $play
+     * @throws ErrorException
+     */
+    public static function postByPlay(Play $play)
+    {
+        if (!isset($play)) {
+            throw new ErrorException('"play" should not be null!');
+        }
+        foreach ($play->weights as $r => $w) {
+            if (!Rule::create($play->id, $r, $w)->post()) {
+                throw new ErrorException('Fail to add play rule!');
+            }
+        }
+    }
+
+    /**
+     * @param Play $play
+     * @throws ErrorException
+     */
+    public static function putByPlay(Play $play)
+    {
+        if (!isset($play)) {
+            throw new ErrorException('"play" should not be null!');
+        }
+        $list = Rule::rules($play->id);
+        if (!empty($list)) {
+            foreach ($play->weights as $r => $w) {
+                $create = true;
+                foreach ($list as $obj) {
+                    if ($obj instanceof Rule && $obj->reward_id === $r) {
+                        if ($obj->weight !== $w) {
+                            $obj->weight = $w;
+                            if (!$obj->put([Rule::COL_WEIGHT])) {
+                                throw new ErrorException('Fail to put play rule!');
+                            }
+                        }
+                        $create = false;
+                        break;
+                    }
+                }
+                if ($create) {
+                    $obj = Rule::create($play->id, $r, $w);
+                    if (!$obj->post()) {
+                        throw new ErrorException('Fail to post new play rule!');
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * @param array|null $where
      * @param int $limit
      * @param int $page

@@ -108,6 +108,7 @@ Lottery::setConfigPath('./config.yml');
 |string|play_id|Y|N|玩法UUID|
 |string|reward_id|Y|N|奖品UUID|
 |bool|winning|N|N|是否中奖|
+|bool|passing|N|N|是否生效|
 
 ### 接口方法
 
@@ -197,7 +198,7 @@ Lottery::setConfigPath('./config.yml');
   - @param
     - string $user_id 用户UUID
     - callable $callback 回调记录(`Record`)
-  - @return string 记录UUID，前端需延迟处理，10秒后查询不到检查`playCount`
+  - @return string 记录UUID，便于前端处理和追踪
 
 #### 记录(`Record`)
 
