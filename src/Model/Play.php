@@ -195,35 +195,28 @@ class Play extends DbPlay
             throw new ErrorException('No reward!');
         }
 
+        $record = Record::create($user_id, $this->id, $id);
+
         if ($id === Reward::ID_AGAIN) {
             if (is_callable($callback)) {
-                $callback(Record::ID_AGAIN);
+                $callback($record);
             }
 
             return Record::ID_AGAIN;
         }
 
         $activity = $this;
-        $record = Record::create($user_id, $this->id, $id);
 
         Lock::synchronized(
             function () use ($activity, $record, $callback) {
                 if ($activity->refresh() && $activity->pass()) {
                     $reward = Reward::object($record->reward_id);
 
-                    $record->winning = $activity->playCount($record->user_id) > 0;
-                    if ($record->winning) {
-                        $record->winning = $reward->refresh() && $reward->pass();
-                    }
-                    if ($record->winning) {
-                        $record->winning = $activity->increase($activity::COL_COUNT);
-                    }
-                    if ($record->winning) {
-                        $record->winning = $reward->increase($reward::COL_COUNT);
-                    }
-                    if ($record->winning && $record->reward_id === Reward::ID_NULL) {
-                        $record->winning = false;
-                    }
+                    $record->winning = ($activity->playCount($record->user_id) > 0)
+                        && $reward->refresh() && $reward->pass()
+                        && $activity->increase($activity::COL_COUNT)
+                        && $reward->increase($reward::COL_COUNT)
+                        && ($record->reward_id !== Reward::ID_NULL);
                 } else {
                     $record->winning = false;
                     $record->passing = false;
