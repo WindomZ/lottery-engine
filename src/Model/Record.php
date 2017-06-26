@@ -116,4 +116,13 @@ class Record extends DbRecord
     {
         return (new Record())->countQuery($where, $map);
     }
+
+    /**
+     * @return bool
+     */
+    public function isWinning(): bool
+    {
+        return $this->reward_id !== Reward::ID_NULL && $this->reward_id !== Reward::ID_AGAIN
+            && $this->winning && $this->passing;
+    }
 }

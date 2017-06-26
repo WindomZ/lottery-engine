@@ -150,15 +150,18 @@ class ModelTest extends TestCase
 
         $record1 = Record::object($recordId1);
         self::assertNotEmpty($record1);
-        self::assertTrue($record1->id !== Reward::ID_NULL || $record1->winning);
+        self::assertTrue(!$record1->isWinning() || $record1->winning);
+        self::assertTrue(!$record1->isWinning() || $record1->putRelated($user_id));
 
         $record2 = Record::object($recordId2);
         self::assertNotEmpty($record2);
-        self::assertTrue($record2->id !== Reward::ID_NULL || $record2->winning);
+        self::assertTrue(!$record2->isWinning() || $record2->winning);
+        self::assertTrue(!$record2->isWinning() || $record2->putRelated($user_id));
 
         $record3 = Record::object($recordId3);
         self::assertNotEmpty($record3);
-        self::assertTrue($record3->id !== Reward::ID_NULL || $record3->winning);
+        self::assertTrue(!$record3->isWinning() || $record3->winning);
+        self::assertTrue(!$record3->isWinning() || $record3->putRelated($user_id));
 
         sleep(1);
         self::assertEquals($count, 3);
