@@ -16,7 +16,7 @@
 - [x] Reward
 - [x] Record
 
-## Installation
+## Install
 
 Open the terminal in the project directory:
 ```bash
@@ -31,6 +31,7 @@ database_type: mysql
 database_name: lotterydb
 database_username: root
 database_password: root
+database_json: true # If the database supports JSON.
 ```
 
 If only for quick testing, 
