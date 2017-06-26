@@ -114,7 +114,7 @@ abstract class BaseId extends BaseList
      */
     public function put($columns, array $where = []): bool
     {
-        if ($columns !== '*') {
+        if (is_array($columns)) {
             $columns = array_diff($columns, [self::COL_ID]);
             $columns = array_diff($columns, [self::COL_POST_TIME]);
             array_push($columns, self::COL_PUT_TIME);

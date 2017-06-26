@@ -84,7 +84,7 @@ abstract class BaseList extends BaseCommon
 
         $data = $this->DB()->select($this->getTableName(), '*', $where);
 
-        if (!$data || gettype($data) !== 'array') {
+        if (!$data || !is_array($data)) {
             return false;
         }
 
