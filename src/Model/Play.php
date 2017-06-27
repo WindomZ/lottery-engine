@@ -166,6 +166,8 @@ class Play extends DbPlay
             );
             if ($count >= $this->limit) {
                 return 0;
+            } elseif ($count < 0) {
+                return $this->limit;
             }
 
             return $this->limit - $count;
