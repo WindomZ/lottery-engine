@@ -107,13 +107,7 @@ class Rule extends DbRule
         if (!is_array($play->weights)) {
             throw new ErrorException('"weights" should be array!');
         }
-        if (empty($play->weights)) {
-            return;
-        }
         $list = Rule::rules($play->id);
-        if (empty($list)) {
-            return;
-        }
         foreach ($play->weights as $rid => $rw) {
             $create = true;
             foreach ($list as $obj) {

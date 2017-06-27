@@ -82,7 +82,7 @@ class Play extends DbPlay
         if ($this->hasRule()) {
             if (is_string($columns)) {
                 Rule::putByPlay($this);
-            } elseif (is_array($columns) && array_key_exists(self::COL_WEIGHTS, $columns)) {
+            } elseif (is_array($columns) && in_array(self::COL_WEIGHTS, $columns)) {
                 Rule::putByPlay($this);
                 $columns = array_diff($columns, [self::COL_WEIGHTS]);
             }

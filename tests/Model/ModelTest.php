@@ -85,21 +85,28 @@ class ModelTest extends TestCase
             $play->limit = 3;
             $play->size = 6;
 
-            $play->setReward(Reward::ID_NULL, 20);
-            $play->setReward(Reward::ID_AGAIN, 30);
+            $play->setReward(Reward::ID_NULL, 1);
+            $play->setReward(Reward::ID_AGAIN, 2);
 
             self::assertTrue($play->post());
 
-            $play->setReward($reward->id, 10);
             $play->setReward(Reward::ID_NULL, 11);
-            $play->weights = array_diff_key($play->weights, [Reward::ID_AGAIN => 0]);
 
-            self::assertTrue($play->put([Play::COL_WEIGHTS]));
+            self::assertTrue($play->put([Play::COL_NAME, Play::COL_DESC, Play::COL_DAILY, Play::COL_LIMIT, Play::COL_SIZE]));
         } else {
             $play = $list[Play::ARG_DATA][0];
         }
 
         self::assertNotEmpty($play);
+
+        $play = Play::object($play->id);
+        self::assertNotEmpty($play);
+
+        $play->setReward($reward->id, 20);
+        $play->setReward(Reward::ID_NULL, 21);
+//        $play->weights = array_diff_key($play->weights, [Reward::ID_AGAIN => 0]);
+
+        self::assertTrue($play->put([Play::COL_NAME, Play::COL_DESC, Play::COL_DAILY, Play::COL_LIMIT, Play::COL_SIZE]));
 
         return $play;
     }
