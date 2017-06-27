@@ -83,7 +83,7 @@ class Play extends BaseTemplate2
             self::COL_LIMIT => $this->limit,
             self::COL_SIZE => $this->size,
             self::COL_COUNT => $this->count,
-            self::COL_RULE => $this->rule,
+            self::COL_RULE => $this->hasRule(),
         ];
 
         if ($this->DB()->getSupportJSON()) {
@@ -113,8 +113,10 @@ class Play extends BaseTemplate2
         $this->count = intval($data[self::COL_COUNT]);
         if ($this->DB()->getSupportJSON()) {
             $this->weights = json_decode($data[self::COL_WEIGHTS], true);
+            $this->rule = boolval($data[self::COL_RULE]);
+        } else {
+            $this->rule = true;
         }
-        $this->rule = boolval($data[self::COL_RULE]);
 
         return $this;
     }
@@ -145,7 +147,7 @@ class Play extends BaseTemplate2
         if ($this->count < 0) {
             throw new ErrorException('"count" should be positive!');
         }
-        if (!$this->rule && empty($this->weights)) {
+        if (!$this->hasRule() && empty($this->weights)) {
             throw new ErrorException('"weights" should not be empty!');
         }
 
@@ -167,5 +169,13 @@ class Play extends BaseTemplate2
     public function pass(): bool
     {
         return $this->active && $this->count < $this->size;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasRule(): bool
+    {
+        return $this->rule || !$this->DB()->getSupportJSON();
     }
 }

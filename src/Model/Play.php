@@ -61,7 +61,7 @@ class Play extends DbPlay
      */
     public function post(): bool
     {
-        if ($this->rule) {
+        if ($this->hasRule()) {
             if (!Uuid::isValid($this->id)) {
                 $this->id = Uuid::uuid();
             }
@@ -79,7 +79,7 @@ class Play extends DbPlay
      */
     public function put($columns, array $where = []): bool
     {
-        if ($this->rule) {
+        if ($this->hasRule()) {
             if (is_string($columns)) {
                 Rule::putByPlay($this);
             } elseif (is_array($columns) && array_key_exists(self::COL_WEIGHTS, $columns)) {
@@ -118,7 +118,7 @@ class Play extends DbPlay
         $id = '';
 
         $sum = 0;
-        if ($this->rule && empty($this->weights)) {
+        if ($this->hasRule() && empty($this->weights)) {
             $this->weights = Rule::weights($this->id);
         }
         foreach ($this->weights as $weight) {
