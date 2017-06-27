@@ -85,6 +85,9 @@ class Rule extends DbRule
         if (!isset($play)) {
             throw new ErrorException('"play" should not be null!');
         }
+        if (!is_array($play->weights)) {
+            throw new ErrorException('"weights" should be array!');
+        }
         foreach ($play->weights as $r => $w) {
             if (!Rule::create($play->id, $r, $w)->post()) {
                 throw new ErrorException('Fail to add play rule!');
