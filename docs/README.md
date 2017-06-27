@@ -85,7 +85,7 @@ Lottery::setConfigPath('./config.yml');
 |int|size|Y|Y|参与活动总数|
 |int|count|N|N|参与活动次数|
 |json|weights|Y|Y|奖品权重(若不支持json则开启'rule')|
-|bool|rule|N|Y|是否开启玩法规则(`Rule`)|
+|bool|rule|N|N|是否开启玩法规则(`Rule`)|
 
 #### 玩法规则(`Rule`)
 
