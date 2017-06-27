@@ -101,6 +101,9 @@ class Rule extends DbRule
         if (!isset($play)) {
             throw new ErrorException('"play" should not be null!');
         }
+        if (!is_array($play->weights)) {
+            throw new ErrorException('"weights" should be array!');
+        }
         if (empty($play->weights)) {
             return;
         }
@@ -112,7 +115,7 @@ class Rule extends DbRule
             $create = true;
             foreach ($list as $obj) {
                 if ($obj instanceof Rule && $obj->reward_id === $rid) {
-                    if ($obj->weight !== $rw) {
+                    if ($obj->weight !== intval($rw)) {
                         $obj->weight = $rw;
                         if (!$obj->put([Rule::COL_WEIGHT])) {
                             throw new ErrorException('Fail to put play rule!');
@@ -122,10 +125,26 @@ class Rule extends DbRule
                     break;
                 }
             }
-            if ($create) {
-                $obj = Rule::create($play->id, $rid, $rw);
-                if (!$obj->post()) {
-                    throw new ErrorException('Fail to post new play rule!');
+            if ($create && !Rule::create($play->id, $rid, $rw)->post()) {
+                throw new ErrorException('Fail to post new play rule!');
+            }
+        }
+        foreach ($list as $obj) {
+            if (!($obj instanceof Rule)) {
+                continue;
+            }
+            $delete = true;
+            foreach ($play->weights as $rid => $rw) {
+                if ($obj->reward_id === $rid) {
+                    $delete = false;
+                    break;
+                }
+            }
+            if ($delete) {
+                $play->weights[$obj->reward_id] = 0;
+                $obj->weight = 0;
+                if (!$obj->put([Rule::COL_WEIGHT])) {
+                    throw new ErrorException('Fail to put play rule!');
                 }
             }
         }
