@@ -117,7 +117,7 @@ abstract class BaseId extends BaseList
         if (is_array($columns)) {
             $columns = array_diff($columns, [self::COL_ID]);
             $columns = array_diff($columns, [self::COL_POST_TIME]);
-            array_push($columns, self::COL_PUT_TIME);
+            $columns[] = self::COL_PUT_TIME;
         }
 
         if (!array_key_exists(self::COL_ID, $where)) {

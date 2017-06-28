@@ -92,7 +92,9 @@ class ModelTest extends TestCase
 
             $play->setReward(Reward::ID_NULL, 11);
 
-            self::assertTrue($play->put([Play::COL_NAME, Play::COL_DESC, Play::COL_DAILY, Play::COL_LIMIT, Play::COL_SIZE]));
+            self::assertTrue(
+                $play->put([Play::COL_NAME, Play::COL_DESC, Play::COL_DAILY, Play::COL_LIMIT, Play::COL_SIZE])
+            );
         } else {
             $play = $list[Play::ARG_DATA][0];
         }
@@ -106,7 +108,9 @@ class ModelTest extends TestCase
         $play->setReward(Reward::ID_NULL, 21);
 //        $play->weights = array_diff_key($play->weights, [Reward::ID_AGAIN => 0]);
 
-        self::assertTrue($play->put([Play::COL_NAME, Play::COL_DESC, Play::COL_DAILY, Play::COL_LIMIT, Play::COL_SIZE]));
+        self::assertTrue(
+            $play->put([Play::COL_NAME, Play::COL_DESC, Play::COL_DAILY, Play::COL_LIMIT, Play::COL_SIZE])
+        );
 
         return $play;
     }
@@ -153,7 +157,7 @@ class ModelTest extends TestCase
                 }
             );
             self::assertNotEmpty($recordId);
-            array_push($recordIds, $recordId);
+            $recordIds[] = $recordId;
         }
 
         sleep(1);

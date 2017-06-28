@@ -27,7 +27,7 @@ abstract class BaseList extends BaseCommon
     protected function addList($obj)
     {
         if (!empty($obj)) {
-            array_push($this->select_list, $obj);
+            $this->select_list[] = $obj;
         }
     }
 
