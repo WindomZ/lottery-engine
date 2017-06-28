@@ -11,10 +11,10 @@
 
 ## Feature
 
-- [x] Play
-- [x] Rule
-- [x] Reward
-- [x] Record
+- [x] Play - How to play
+- [x] Rule - The rule of playing
+- [x] Reward - Play rewards
+- [x] Record - Play records
 
 ## Install
 
