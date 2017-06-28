@@ -122,17 +122,13 @@ class Play extends DbPlay
             $this->weights = Rule::weights($this->id);
         }
         foreach ($this->weights as $weight) {
-            if (is_integer($weight)) {
-                $sum += $weight;
-            }
+            is_integer($weight) && $sum += $weight;
         }
 
         if ($sum > 0) {
             $index = mt_rand(0, $sum);
             foreach ($this->weights as $reward_id => $weight) {
-                if (is_integer($weight)) {
-                    $index -= $weight;
-                }
+                is_integer($weight) && $index -= $weight;
                 if ($index <= 0) {
                     $id = $reward_id;
                     break;
