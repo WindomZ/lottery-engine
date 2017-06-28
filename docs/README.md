@@ -28,6 +28,9 @@ database_type: mysql
 database_name: lotterydb
 database_username: root
 database_password: root
+database_charset: utf8
+database_logging: false
+database_json: true # 是否支持json字段
 ```
 
 如果只是作为测试，可以在`MySQL`运行`./sql/lotterydb.sql`来快速创建测试数据库。
@@ -82,7 +85,7 @@ Lottery::setConfigPath('./config.yml');
 |int|size|Y|Y|参与活动总数|
 |int|count|N|N|参与活动次数|
 |json|weights|Y|Y|奖品权重(若不支持json则开启'rule')|
-|bool|rule|N|Y|是否开启玩法规则(`Rule`)|
+|bool|rule|N|N|是否开启玩法规则(`Rule`)|
 
 #### 玩法规则(`Rule`)
 
@@ -107,6 +110,7 @@ Lottery::setConfigPath('./config.yml');
 |string|user_id|Y|N|用户UUID|
 |string|play_id|Y|N|玩法UUID|
 |string|reward_id|Y|N|奖品UUID|
+|string|related_id|N|Y|关联外部UUID(可选)|
 |bool|winning|N|N|是否中奖|
 |bool|passing|N|N|是否生效|
 
@@ -197,8 +201,8 @@ Lottery::setConfigPath('./config.yml');
   - @description 进行抽奖玩法(`Play`)
   - @param
     - string $user_id 用户UUID
-    - callable $callback 回调记录(`Record`)
-  - @return string 记录UUID，便于前端处理和追踪
+    - callable $callback($err, Record $record) 回调系统确认的记录(`Record`)
+  - @return string 记录UUID，系统未确认，便于后续的追踪
 
 #### 记录(`Record`)
 
@@ -216,6 +220,16 @@ Lottery::setConfigPath('./config.yml');
     - int $page 筛选页数
     - array $order 筛选排序
   - @return array
+
+- Record->isWinning()
+  - @description 是否中奖
+  - @return bool
+
+- Record->putRelated($related_id)
+  - @description 设置关联外部UUID
+  - @param
+    - string $related_id 关联外部UUID
+  - @return bool
 
 - Record::ID_NULL
   - @description 默认的记录UUID - 空记录(预留)

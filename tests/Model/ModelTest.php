@@ -85,16 +85,32 @@ class ModelTest extends TestCase
             $play->limit = 3;
             $play->size = 6;
 
-            $play->setReward($reward->id, 10);
-            $play->setReward(Reward::ID_NULL, 20);
-            $play->setReward(Reward::ID_AGAIN, 30);
+            $play->setReward(Reward::ID_NULL, 1);
+            $play->setReward(Reward::ID_AGAIN, 2);
 
             self::assertTrue($play->post());
+
+            $play->setReward(Reward::ID_NULL, 11);
+
+            self::assertTrue(
+                $play->put([Play::COL_NAME, Play::COL_DESC, Play::COL_DAILY, Play::COL_LIMIT, Play::COL_SIZE])
+            );
         } else {
             $play = $list[Play::ARG_DATA][0];
         }
 
         self::assertNotEmpty($play);
+
+        $play = Play::object($play->id);
+        self::assertNotEmpty($play);
+
+        $play->setReward($reward->id, 20);
+        $play->setReward(Reward::ID_NULL, 21);
+//        $play->weights = array_diff_key($play->weights, [Reward::ID_AGAIN => 0]);
+
+        self::assertTrue(
+            $play->put([Play::COL_NAME, Play::COL_DESC, Play::COL_DAILY, Play::COL_LIMIT, Play::COL_SIZE])
+        );
 
         return $play;
     }
@@ -120,47 +136,42 @@ class ModelTest extends TestCase
     {
         self::assertNotEmpty($play);
 
+        $SIZE = 20;
         $user_id = Uuid::uuid();
+        $recordIds = array();
         $count = 0;
+        $count_win = 0;
 
-        $recordId1 = $play->play(
-            $user_id,
-            function ($record) use (&$count) {
-                self::assertNotEmpty($record);
-                $count++;
-            }
-        );
-        self::assertNotEmpty($recordId1);
-        $recordId2 = $play->play(
-            $user_id,
-            function ($record) use (&$count) {
-                self::assertNotEmpty($record);
-                $count++;
-            }
-        );
-        self::assertNotEmpty($recordId2);
-        $recordId3 = $play->play(
-            $user_id,
-            function ($record) use (&$count) {
-                self::assertNotEmpty($record);
-                $count++;
-            }
-        );
-        self::assertNotEmpty($recordId3);
-
-        $record1 = Record::object($recordId1);
-        self::assertNotEmpty($record1);
-        self::assertTrue($record1->id !== Reward::ID_NULL || $record1->winning);
-
-        $record2 = Record::object($recordId2);
-        self::assertNotEmpty($record2);
-        self::assertTrue($record2->id !== Reward::ID_NULL || $record2->winning);
-
-        $record3 = Record::object($recordId3);
-        self::assertNotEmpty($record3);
-        self::assertTrue($record3->id !== Reward::ID_NULL || $record3->winning);
+        for ($i = 0; $i < $SIZE; $i++) {
+            $recordId = $play->play(
+                $user_id,
+                function ($err, Record $record) use (&$count, &$count_win) {
+                    if (isset($err)) {
+                        self::assertEmpty($err, (string)$err);
+                    }
+                    self::assertNotEmpty($record);
+                    $count++;
+                    if ($record->isWinning()) {
+                        $count_win++;
+                    }
+                }
+            );
+            self::assertNotEmpty($recordId);
+            $recordIds[] = $recordId;
+        }
 
         sleep(1);
-        self::assertEquals($count, 3);
+        self::assertEquals($count, $SIZE);
+
+        for ($i = 0; $i < $SIZE; $i++) {
+            $record = Record::object($recordIds[$i]);
+            self::assertNotEmpty($record);
+            if ($record->isWinning()) {
+                self::assertTrue($record->putRelated($user_id));
+                $count_win--;
+            }
+        }
+
+        self::assertEmpty($count_win);
     }
 }

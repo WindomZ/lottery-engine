@@ -11,10 +11,10 @@
 
 ## 特性
 
-- [x] 玩法
-- [x] 玩法规则
-- [x] 奖品
-- [x] 记录
+- [x] 玩法 - 怎么玩
+- [x] 玩法规则 - 玩的规则
+- [x] 奖品 - 玩的奖品
+- [x] 记录 - 玩的记录
 
 ## 安装
 
@@ -31,7 +31,9 @@ database_type: mysql
 database_name: lotterydb
 database_username: root
 database_password: root
-database_logging: true
+database_charset: utf8
+database_logging: false
+database_json: true # 是否支持json字段
 ```
 
 如果仅用于快速测试，

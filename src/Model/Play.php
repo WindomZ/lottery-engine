@@ -61,7 +61,7 @@ class Play extends DbPlay
      */
     public function post(): bool
     {
-        if ($this->rule) {
+        if ($this->hasRule()) {
             if (!Uuid::isValid($this->id)) {
                 $this->id = Uuid::uuid();
             }
@@ -79,10 +79,10 @@ class Play extends DbPlay
      */
     public function put($columns, array $where = []): bool
     {
-        if ($this->rule) {
+        if ($this->hasRule()) {
             if (is_string($columns)) {
                 Rule::putByPlay($this);
-            } elseif (is_array($columns) && array_key_exists(self::COL_WEIGHTS, $columns)) {
+            } elseif (is_array($columns) && in_array(self::COL_WEIGHTS, $columns)) {
                 Rule::putByPlay($this);
                 $columns = array_diff($columns, [self::COL_WEIGHTS]);
             }
@@ -118,7 +118,7 @@ class Play extends DbPlay
         $id = '';
 
         $sum = 0;
-        if ($this->rule && empty($this->weights)) {
+        if ($this->hasRule() && empty($this->weights)) {
             $this->weights = Rule::weights($this->id);
         }
         foreach ($this->weights as $weight) {
@@ -166,6 +166,8 @@ class Play extends DbPlay
             );
             if ($count >= $this->limit) {
                 return 0;
+            } elseif ($count < 0) {
+                return $this->limit;
             }
 
             return $this->limit - $count;
@@ -195,46 +197,50 @@ class Play extends DbPlay
             throw new ErrorException('No reward!');
         }
 
+        $record = Record::create($user_id, $this->id, $id);
+
         if ($id === Reward::ID_AGAIN) {
             if (is_callable($callback)) {
-                $callback(Record::ID_AGAIN);
+                $callback(null, $record);
             }
 
             return Record::ID_AGAIN;
         }
 
         $activity = $this;
-        $record = Record::create($user_id, $this->id, $id);
 
         Lock::synchronized(
             function () use ($activity, $record, $callback) {
-                if ($activity->refresh() && $activity->pass()) {
-                    $reward = Reward::object($record->reward_id);
-
-                    $record->winning = $activity->playCount($record->user_id) > 0;
-                    if ($record->winning) {
-                        $record->winning = $reward->refresh() && $reward->pass();
-                    }
-                    if ($record->winning) {
-                        $record->winning = $activity->increase($activity::COL_COUNT);
-                    }
-                    if ($record->winning) {
-                        $record->winning = $reward->increase($reward::COL_COUNT);
-                    }
-                    if ($record->winning && $record->reward_id === Reward::ID_NULL) {
+                try {
+                    if ($activity->refresh()
+                        && $activity->pass()
+                        && $activity->playCount($record->user_id) > 0
+                    ) {
+                        $reward = Reward::object($record->reward_id);
+                        $record->winning = $reward->refresh() && $reward->pass()
+                            && $activity->increase($activity::COL_COUNT)
+                            && $reward->increase($reward::COL_COUNT)
+                            && ($record->reward_id !== Reward::ID_NULL);
+                    } else {
                         $record->winning = false;
+                        $record->passing = false;
                     }
-                } else {
-                    $record->winning = false;
-                    $record->passing = false;
-                }
-                $record->post();
+                    $record->post();
 
-                if (is_callable($callback)) {
-                    $callback($record);
+                    if (is_callable($callback)) {
+                        $callback(null, $record);
+                    }
+                } catch (\Exception $err) {
+                    if (is_callable($callback)) {
+                        $callback($err, $record);
+                    }
                 }
             }
         );
+
+        if ($id === Reward::ID_NULL) {
+            return Record::ID_NULL;
+        }
 
         return $record->id;
     }

@@ -14,6 +14,7 @@ class Record extends BaseId
     const COL_USER_ID = 'user_id';
     const COL_PLAY_ID = 'play_id';
     const COL_REWARD_ID = 'reward_id';
+    const COL_RELATED_ID = 'related_id';
     const COL_WINNING = 'winning';
     const COL_PASSING = 'passing';
 
@@ -31,6 +32,11 @@ class Record extends BaseId
      * @var string
      */
     public $reward_id = '';
+
+    /**
+     * @var string
+     */
+    public $related_id = '';
 
     /**
      * @var bool
@@ -69,6 +75,7 @@ class Record extends BaseId
                 self::COL_USER_ID => $this->user_id,
                 self::COL_PLAY_ID => $this->play_id,
                 self::COL_REWARD_ID => $this->reward_id,
+                self::COL_RELATED_ID => $this->related_id,
                 self::COL_WINNING => $this->winning,
                 self::COL_PASSING => $this->passing,
             ]
@@ -86,6 +93,7 @@ class Record extends BaseId
         $this->user_id = $data[self::COL_USER_ID];
         $this->play_id = $data[self::COL_PLAY_ID];
         $this->reward_id = $data[self::COL_REWARD_ID];
+        $this->related_id = $data[self::COL_RELATED_ID];
         $this->winning = boolval($data[self::COL_WINNING]);
         $this->passing = boolval($data[self::COL_PASSING]);
 
@@ -128,5 +136,20 @@ class Record extends BaseId
     {
         $this->beforePost();
         parent::beforePut();
+    }
+
+    /**
+     * @param string $related_id
+     * @return bool
+     * @throws ErrorException
+     */
+    public function putRelated(string $related_id): bool
+    {
+        if (!Uuid::isValid($related_id)) {
+            throw new ErrorException('"related_id" should be UUID: '.$related_id);
+        }
+        $this->related_id = $related_id;
+
+        return $this->put([self::COL_RELATED_ID]);
     }
 }

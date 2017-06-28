@@ -11,10 +11,10 @@
 
 ## Feature
 
-- [x] Play
-- [x] Rule
-- [x] Reward
-- [x] Record
+- [x] Play - How to play
+- [x] Rule - The rule of playing
+- [x] Reward - Play rewards
+- [x] Record - Play records
 
 ## Install
 
@@ -31,6 +31,8 @@ database_type: mysql
 database_name: lotterydb
 database_username: root
 database_password: root
+database_charset: utf8
+database_logging: false
 database_json: true # If the database supports JSON.
 ```
 
