@@ -164,7 +164,7 @@ class ModelTest extends TestCase
             $recordIds[] = $recordId;
         }
         if ($index) {
-            var_dump(">>> play average time: ".((microtime(true) - $test_time) / $index)."s\n");
+            var_dump(">>> play average time: ".((microtime(true) - $test_time) / $index)."s");
             sleep(1);
             self::assertEquals($count, $index);
         }

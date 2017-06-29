@@ -21,11 +21,13 @@ class Reward extends DbReward
     private static $cache;
 
     /**
+     * To support ID_NULL & ID_AGAIN
      * @var bool
      */
     protected $fake = false;
 
     /**
+     * For fast operation Reward without read DB
      * @var bool
      */
     protected $goat = false;
