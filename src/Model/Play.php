@@ -295,8 +295,9 @@ class Play extends DbPlay
 
         $play = $this;
 
-        Lock::synchronized(
+        Lock::casSynchronized(
             function () use ($play, $record, $callback) {
+                $err = null;
                 try {
                     if ($play->passSync($record->user_id)) {
                         $play->payCount($record->user_id);
@@ -308,13 +309,12 @@ class Play extends DbPlay
                         $record->passing = false;
                     }
                     $record->post();
-
+                } catch (\Exception $e) {
+                    $err = $e;
+                } finally {
+                    Lock::casNotify();
                     if (is_callable($callback)) {
-                        $callback(null, $record);
-                    }
-                } catch (\Exception $err) {
-                    if (is_callable($callback)) {
-                        $callback($err, $record);
+                        @$callback($err, $record);
                     }
                 }
             }
