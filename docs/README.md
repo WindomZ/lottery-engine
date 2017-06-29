@@ -231,6 +231,9 @@ Lottery::setConfigPath('./config.yml');
     - string $related_id 关联外部UUID
   - @return bool
 
+- Record::ID_FINISH
+  - @description 默认的记录UUID - 当天活动结束(多种原因)
+
 - Record::ID_NULL
   - @description 默认的记录UUID - 空记录(预留)
 
