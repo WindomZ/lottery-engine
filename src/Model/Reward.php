@@ -4,6 +4,7 @@ namespace LotteryEngine\Model;
 
 use LotteryEngine\Database\Reward as DbReward;
 use LotteryEngine\Exception\ErrorException;
+use SHMCache\Block;
 
 /**
  * Class Reward
@@ -15,9 +16,21 @@ class Reward extends DbReward
     const ID_AGAIN = '00000000-0000-0000-0000-000000000002';
 
     /**
+     * @var Block
+     */
+    private static $cache;
+
+    /**
+     * To support ID_NULL & ID_AGAIN
      * @var bool
      */
     protected $fake = false;
+
+    /**
+     * For fast operation Reward without read DB
+     * @var bool
+     */
+    protected $goat = false;
 
     /**
      * Reward constructor.
@@ -25,6 +38,10 @@ class Reward extends DbReward
     public function __construct()
     {
         parent::__construct();
+
+        if (!self::$cache) {
+            self::$cache = new Block(3600);
+        }
     }
 
     /**
@@ -37,9 +54,10 @@ class Reward extends DbReward
 
     /**
      * @param string|null $id
+     * @param bool $goat
      * @return Reward|null
      */
-    public static function object(string $id = null)
+    public static function object(string $id = null, bool $goat = false)
     {
         $obj = new Reward();
         if ($id) {
@@ -59,7 +77,13 @@ class Reward extends DbReward
 
                     return $obj;
                 default:
-                    if (!$obj->getById($id)) {
+                    if ($goat) {
+                        $obj->id = $id;
+                        $obj->name = 'GOAT';
+                        $obj->active = true;
+                        $obj->fake = false;
+                        $obj->goat = true;
+                    } elseif (!$obj->getById($id)) {
                         return null;
                     }
             }
@@ -124,11 +148,42 @@ class Reward extends DbReward
      */
     public function pass(): bool
     {
-        if ($this->fake) {
+        if ($this->fake || $this->goat) {
             return true;
         }
 
         return parent::pass();
+    }
+
+    /**
+     * @return bool
+     */
+    public function passSync()
+    {
+        if ($this->fake) {
+            return true;
+        }
+
+        if (!$this->pass()) {
+            return false;
+        }
+
+        $data = self::$cache->get($this->id);
+        if (!is_array($data)) {
+            if (!$this->refresh()) {
+                return false;
+            }
+            $data = array(
+                'active' => $this->active,
+                'count' => $this->count,
+                'size' => $this->size,
+            );
+            self::$cache->save($this->id, $data);
+
+            return true;
+        }
+
+        return boolval($data['active']) && intval($data['count']) < intval($data['size']);
     }
 
     /**
@@ -143,6 +198,14 @@ class Reward extends DbReward
     {
         if ($this->fake) {
             return true;
+        }
+
+        if ($column === self::COL_COUNT) {
+            $arr = self::$cache->get($this->id);
+            if (is_array($arr)) {
+                $arr['count'] = intval($arr['count']) + 1;
+                self::$cache->save($this->id, $arr);
+            }
         }
 
         return parent::increase($column, $count, $where, $data);
@@ -161,5 +224,16 @@ class Reward extends DbReward
         $this->award_kind = $award_kind;
 
         return $this;
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public static function pay(string $id): bool
+    {
+        $reward = Reward::object($id, true);
+
+        return $reward->passSync() && $reward->increase(Reward::COL_COUNT);
     }
 }
