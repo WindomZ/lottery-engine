@@ -82,7 +82,7 @@ class ModelTest extends TestCase
             $play->name = '这是名称name';
             $play->desc = '这是描述desc';
             $play->daily = true;
-            $play->limit = 50;
+            $play->limit = 3;
             $play->size = $reward->size;
 
             $play->setReward(Reward::ID_NULL, 1);

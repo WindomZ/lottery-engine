@@ -26,6 +26,11 @@ class Reward extends DbReward
     protected $fake = false;
 
     /**
+     * @var bool
+     */
+    protected $goat = false;
+
+    /**
      * Reward constructor.
      */
     public function __construct()
@@ -47,9 +52,10 @@ class Reward extends DbReward
 
     /**
      * @param string|null $id
+     * @param bool $goat
      * @return Reward|null
      */
-    public static function object(string $id = null)
+    public static function object(string $id = null, bool $goat = false)
     {
         $obj = new Reward();
         if ($id) {
@@ -69,7 +75,13 @@ class Reward extends DbReward
 
                     return $obj;
                 default:
-                    if (!$obj->getById($id)) {
+                    if ($goat) {
+                        $obj->id = $id;
+                        $obj->name = 'GOAT';
+                        $obj->active = true;
+                        $obj->fake = false;
+                        $obj->goat = true;
+                    } elseif (!$obj->getById($id)) {
                         return null;
                     }
             }
@@ -134,7 +146,7 @@ class Reward extends DbReward
      */
     public function pass(): bool
     {
-        if ($this->fake) {
+        if ($this->fake || $this->goat) {
             return true;
         }
 
@@ -210,5 +222,16 @@ class Reward extends DbReward
         $this->award_kind = $award_kind;
 
         return $this;
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public static function pay(string $id): bool
+    {
+        $reward = Reward::object($id, true);
+
+        return $reward->passSync() && $reward->increase(Reward::COL_COUNT);
     }
 }

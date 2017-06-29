@@ -300,10 +300,8 @@ class Play extends DbPlay
                 try {
                     if ($play->passSync($record->user_id)) {
                         $play->payCount($record->user_id);
-                        $reward = Reward::object($record->reward_id);
-                        $record->winning = $reward->passSync()
+                        $record->winning = Reward::pay($record->reward_id)
                             && $play->increase(self::COL_COUNT)
-                            && $reward->increase(Reward::COL_COUNT)
                             && ($record->reward_id !== Reward::ID_NULL);
                     } else {
                         $record->winning = false;
