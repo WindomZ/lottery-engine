@@ -52,6 +52,11 @@ Lottery::setConfigPath('./config.yml');
 
 Refer to the [Document](https://windomz.github.io/lottery-engine)(_Currently only Chinese_) for details.
 
+## Limitation
+
+> There is no memory cache system, such as `Memcached`, `Redis`, but through `shmop` functions to share memory operations, 
+this brings some performance bottlenecks, if necessary, can be rewritten `Cache` class to access.
+
 ## License
 
 The [MIT License](https://github.com/WindomZ/lottery-engine/blob/master/LICENSE)

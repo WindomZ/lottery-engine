@@ -52,6 +52,11 @@ Lottery::setConfigPath('./config.yml');
 
 有关详细信息，请参阅[文档](https://windomz.github.io/lottery-engine)。
 
+## 局限
+
+> 因为没有内存缓存系统，如`Memcached`、`Redis`，而是通过`shmop`函数来共享内存操作，
+这带来了一些性能瓶颈，如有必要，可以重写`Cache`类来接入。
+
 ## 许可
 
 The [MIT License](https://github.com/WindomZ/lottery-engine/blob/master/LICENSE)
