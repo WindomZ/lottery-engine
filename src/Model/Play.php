@@ -17,7 +17,7 @@ class Play extends DbPlay
     /**
      * @var Block
      */
-    private $cache;
+    private static $cache;
 
     /**
      * Play constructor.
@@ -26,7 +26,9 @@ class Play extends DbPlay
     {
         parent::__construct();
 
-        $this->cache = new Block(60);
+        if (!self::$cache) {
+            self::$cache = new Block(60);
+        }
     }
 
     /**
@@ -111,7 +113,7 @@ class Play extends DbPlay
             return false;
         }
 
-        $data = $this->cache->get($this->id);
+        $data = self::$cache->get($this->id);
         if (!is_array($data)) {
             if (!$this->refresh()) {
                 return false;
@@ -121,7 +123,7 @@ class Play extends DbPlay
                 'count' => $this->count,
                 'size' => $this->size,
             );
-            $this->cache->save($this->id, $data);
+            self::$cache->save($this->id, $data);
 
             return true;
         }
@@ -140,10 +142,10 @@ class Play extends DbPlay
     protected function increase(string $column, int $count = 1, array $where = [], array $data = []): bool
     {
         if ($column === self::COL_COUNT) {
-            $arr = $this->cache->get($this->id);
+            $arr = self::$cache->get($this->id);
             if (is_array($arr)) {
                 $arr['count'] = intval($arr['count']) + 1;
-                $this->cache->save($this->id, $arr);
+                self::$cache->save($this->id, $arr);
             }
         }
 
@@ -238,10 +240,10 @@ class Play extends DbPlay
     protected function hasCount(string $user_id): int
     {
         $key = $this->id.'/'.$user_id;
-        $count = $this->cache->get($key);
+        $count = self::$cache->get($key);
         if (!is_integer($count)) {
             $count = $this->playCount($user_id);
-            $this->cache->save($key, $count);
+            self::$cache->save($key, $count);
         }
 
         return $count;
@@ -253,11 +255,11 @@ class Play extends DbPlay
     protected function payCount(string $user_id)
     {
         $key = $this->id.'/'.$user_id;
-        $count = $this->cache->get($key);
+        $count = self::$cache->get($key);
         if (!is_integer($count)) {
             $count = $this->playCount($user_id);
         }
-        $this->cache->save($key, $count - 1);
+        self::$cache->save($key, $count - 1);
     }
 
     /**

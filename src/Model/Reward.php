@@ -18,7 +18,7 @@ class Reward extends DbReward
     /**
      * @var Block
      */
-    private $cache;
+    private static $cache;
 
     /**
      * @var bool
@@ -32,7 +32,9 @@ class Reward extends DbReward
     {
         parent::__construct();
 
-        $this->cache = new Block(60);
+        if (!self::$cache) {
+            self::$cache = new Block(3600);
+        }
     }
 
     /**
@@ -152,7 +154,7 @@ class Reward extends DbReward
             return false;
         }
 
-        $data = $this->cache->get($this->id);
+        $data = self::$cache->get($this->id);
         if (!is_array($data)) {
             if (!$this->refresh()) {
                 return false;
@@ -162,7 +164,7 @@ class Reward extends DbReward
                 'count' => $this->count,
                 'size' => $this->size,
             );
-            $this->cache->save($this->id, $data);
+            self::$cache->save($this->id, $data);
 
             return true;
         }
@@ -185,10 +187,10 @@ class Reward extends DbReward
         }
 
         if ($column === self::COL_COUNT) {
-            $arr = $this->cache->get($this->id);
+            $arr = self::$cache->get($this->id);
             if (is_array($arr)) {
                 $arr['count'] = intval($arr['count']) + 1;
-                $this->cache->save($this->id, $arr);
+                self::$cache->save($this->id, $arr);
             }
         }
 
