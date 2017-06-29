@@ -6,6 +6,7 @@ use LotteryEngine\Database\Play as DbPlay;
 use LotteryEngine\Exception\ErrorException;
 use LotteryEngine\Util\Lock;
 use LotteryEngine\Util\Uuid;
+use SHMCache\Block;
 
 /**
  * Class Play
@@ -14,11 +15,18 @@ use LotteryEngine\Util\Uuid;
 class Play extends DbPlay
 {
     /**
+     * @var Block
+     */
+    private $cache;
+
+    /**
      * Play constructor.
      */
     public function __construct()
     {
         parent::__construct();
+
+        $this->cache = new Block(60);
     }
 
     /**
@@ -89,6 +97,57 @@ class Play extends DbPlay
         }
 
         return parent::put($columns, $where);
+    }
+
+    /**
+     * @param string $user_id
+     * @return bool
+     */
+    public function passSync(string $user_id)
+    {
+        if (!$this->pass()) {
+            return false;
+        } elseif (!$this->hasCount($user_id)) {
+            return false;
+        }
+
+        $data = $this->cache->get($this->id);
+        if (!is_array($data)) {
+            if (!$this->refresh()) {
+                return false;
+            }
+            $data = array(
+                'active' => $this->active,
+                'count' => $this->count,
+                'size' => $this->size,
+            );
+            $this->cache->save($this->id, $data);
+
+            return true;
+        }
+
+        return boolval($data['active']) && intval($data['count']) < intval($data['size']);
+    }
+
+    /**
+     * @param string $column
+     * @param int $count
+     * @param array $where
+     * @param array $data
+     * @return bool
+     * @throws ErrorException
+     */
+    protected function increase(string $column, int $count = 1, array $where = [], array $data = []): bool
+    {
+        if ($column === self::COL_COUNT) {
+            $arr = $this->cache->get($this->id);
+            if (is_array($arr)) {
+                $arr['count'] = intval($arr['count']) + 1;
+                $this->cache->save($this->id, $arr);
+            }
+        }
+
+        return parent::increase($column, $count, $where, $data);
     }
 
     /**
@@ -174,6 +233,35 @@ class Play extends DbPlay
 
     /**
      * @param string $user_id
+     * @return int
+     */
+    protected function hasCount(string $user_id): int
+    {
+        $key = $this->id.'/'.$user_id;
+        $count = $this->cache->get($key);
+        if (!is_integer($count)) {
+            $count = $this->playCount($user_id);
+            $this->cache->save($key, $count);
+        }
+
+        return $count;
+    }
+
+    /**
+     * @param string $user_id
+     */
+    protected function payCount(string $user_id)
+    {
+        $key = $this->id.'/'.$user_id;
+        $count = $this->cache->get($key);
+        if (!is_integer($count)) {
+            $count = $this->playCount($user_id);
+        }
+        $this->cache->save($key, $count - 1);
+    }
+
+    /**
+     * @param string $user_id
      * @param callable|null $callback
      * @return string
      * @throws ErrorException
@@ -184,8 +272,8 @@ class Play extends DbPlay
             throw new ErrorException('"user_id" should be UUID: '.$user_id);
         }
 
-        if (!$this->pass()) {
-            throw new ErrorException('Activity end!');
+        if (!$this->passSync($user_id)) {
+            return Record::ID_FINISH;
         }
 
         $id = $this->randomRewardId();
@@ -203,19 +291,17 @@ class Play extends DbPlay
             return Record::ID_AGAIN;
         }
 
-        $activity = $this;
+        $play = $this;
 
         Lock::synchronized(
-            function () use ($activity, $record, $callback) {
+            function () use ($play, $record, $callback) {
                 try {
-                    if ($activity->refresh()
-                        && $activity->pass()
-                        && $activity->playCount($record->user_id) > 0
-                    ) {
+                    if ($play->passSync($record->user_id)) {
+                        $play->payCount($record->user_id);
                         $reward = Reward::object($record->reward_id);
-                        $record->winning = $reward->refresh() && $reward->pass()
-                            && $activity->increase($activity::COL_COUNT)
-                            && $reward->increase($reward::COL_COUNT)
+                        $record->winning = $reward->passSync()
+                            && $play->increase(self::COL_COUNT)
+                            && $reward->increase(Reward::COL_COUNT)
                             && ($record->reward_id !== Reward::ID_NULL);
                     } else {
                         $record->winning = false;

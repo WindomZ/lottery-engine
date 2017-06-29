@@ -4,6 +4,7 @@ namespace LotteryEngine\Model;
 
 use LotteryEngine\Database\Reward as DbReward;
 use LotteryEngine\Exception\ErrorException;
+use SHMCache\Block;
 
 /**
  * Class Reward
@@ -13,6 +14,11 @@ class Reward extends DbReward
 {
     const ID_NULL = '00000000-0000-0000-0000-000000000001';
     const ID_AGAIN = '00000000-0000-0000-0000-000000000002';
+
+    /**
+     * @var Block
+     */
+    private $cache;
 
     /**
      * @var bool
@@ -25,6 +31,8 @@ class Reward extends DbReward
     public function __construct()
     {
         parent::__construct();
+
+        $this->cache = new Block(60);
     }
 
     /**
@@ -132,6 +140,37 @@ class Reward extends DbReward
     }
 
     /**
+     * @return bool
+     */
+    public function passSync()
+    {
+        if ($this->fake) {
+            return true;
+        }
+
+        if (!$this->pass()) {
+            return false;
+        }
+
+        $data = $this->cache->get($this->id);
+        if (!is_array($data)) {
+            if (!$this->refresh()) {
+                return false;
+            }
+            $data = array(
+                'active' => $this->active,
+                'count' => $this->count,
+                'size' => $this->size,
+            );
+            $this->cache->save($this->id, $data);
+
+            return true;
+        }
+
+        return boolval($data['active']) && intval($data['count']) < intval($data['size']);
+    }
+
+    /**
      * @param string $column
      * @param int $count
      * @param array $where
@@ -143,6 +182,14 @@ class Reward extends DbReward
     {
         if ($this->fake) {
             return true;
+        }
+
+        if ($column === self::COL_COUNT) {
+            $arr = $this->cache->get($this->id);
+            if (is_array($arr)) {
+                $arr['count'] = intval($arr['count']) + 1;
+                $this->cache->save($this->id, $arr);
+            }
         }
 
         return parent::increase($column, $count, $where, $data);

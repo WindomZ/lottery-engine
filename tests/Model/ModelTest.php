@@ -38,7 +38,7 @@ class ModelTest extends TestCase
 
             $reward->name = '这是名称name';
             $reward->desc = '这是描述desc';
-            $reward->size = 6;
+            $reward->size = 1000;
 
             self::assertTrue($reward->post());
         } else {
@@ -82,8 +82,8 @@ class ModelTest extends TestCase
             $play->name = '这是名称name';
             $play->desc = '这是描述desc';
             $play->daily = true;
-            $play->limit = 3;
-            $play->size = 6;
+            $play->limit = 50;
+            $play->size = $reward->size;
 
             $play->setReward(Reward::ID_NULL, 1);
             $play->setReward(Reward::ID_AGAIN, 2);
@@ -136,13 +136,14 @@ class ModelTest extends TestCase
     {
         self::assertNotEmpty($play);
 
-        $SIZE = 20;
+        $index = 0;
         $user_id = Uuid::uuid();
         $recordIds = array();
         $count = 0;
         $count_win = 0;
 
-        for ($i = 0; $i < $SIZE; $i++) {
+        $test_time = microtime(true);
+        for (; true; $index++) {
             $recordId = $play->play(
                 $user_id,
                 function ($err, Record $record) use (&$count, &$count_win) {
@@ -157,13 +158,18 @@ class ModelTest extends TestCase
                 }
             );
             self::assertNotEmpty($recordId);
+            if ($recordId === Record::ID_FINISH) {
+                break;
+            }
             $recordIds[] = $recordId;
         }
+        if ($index) {
+            var_dump(">>> play average time: ".((microtime(true) - $test_time) / $index)."s\n");
+            sleep(1);
+            self::assertEquals($count, $index);
+        }
 
-        sleep(1);
-        self::assertEquals($count, $SIZE);
-
-        for ($i = 0; $i < $SIZE; $i++) {
+        for ($i = 0; $i < $index; $i++) {
             $record = Record::object($recordIds[$i]);
             self::assertNotEmpty($record);
             if ($record->isWinning()) {
