@@ -41,6 +41,7 @@ class Record extends DbRecord
         $obj = new Record();
         if ($id) {
             switch ($id) {
+                case self::ID_FINISH:
                 case self::ID_NULL:
                 case self::ID_AGAIN:
                     $obj->id = $id;
@@ -123,7 +124,8 @@ class Record extends DbRecord
      */
     public function isWinning(): bool
     {
-        return $this->reward_id !== Reward::ID_NULL && $this->reward_id !== Reward::ID_AGAIN
+        return $this->id !== self::ID_FINISH
+            && $this->reward_id !== Reward::ID_NULL && $this->reward_id !== Reward::ID_AGAIN
             && $this->winning && $this->passing;
     }
 }
