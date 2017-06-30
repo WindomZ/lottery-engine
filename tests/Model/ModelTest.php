@@ -39,7 +39,7 @@ class ModelTest extends TestCase
 
             $reward->name = '这是名称name';
             $reward->desc = '这是描述desc';
-            $reward->size = 1000;
+            $reward->size = 5;
 
             self::assertTrue($reward->post());
         } else {
@@ -84,8 +84,9 @@ class ModelTest extends TestCase
             $play->desc = '这是描述desc';
             $play->daily = true;
             $play->limit = 3;
-            $play->size = $reward->size;
+            $play->size = 1000;
             $play->setOwner(Uuid::uuid());
+            $play->sweet = true;
 
             $play->setReward(Reward::ID_NULL, 1);
             $play->setReward(Reward::ID_AGAIN, 2);
@@ -169,6 +170,7 @@ class ModelTest extends TestCase
             var_dump(">>> play average time: ".((microtime(true) - $test_time) / $index)."s");
             sleep(1);
             self::assertEquals($count, $index);
+            self::assertEquals($count, $play->limit);
         }
 
         for ($i = 0; $i < $index; $i++) {

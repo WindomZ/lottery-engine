@@ -179,9 +179,7 @@ class Play extends DbPlay
         $id = '';
 
         $sum = 0;
-        if ($this->hasRule() && empty($this->weights)) {
-            $this->weights = Rule::weights($this->id);
-        }
+        $this->weights = Rule::weights($this);
         foreach ($this->weights as $weight) {
             is_integer($weight) && $sum += $weight;
         }
@@ -280,7 +278,7 @@ class Play extends DbPlay
 
         $id = $this->randomRewardId();
         if (empty($id)) {
-            throw new ErrorException('No reward!');
+            return Record::ID_FINISH;
         }
 
         $record = Record::create($user_id, $this->id, $id);
