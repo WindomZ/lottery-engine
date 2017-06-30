@@ -12,12 +12,15 @@ create table lotterydb.le_play
 	active tinyint(1) default '1' not null,
 	`desc` varchar(256) default '' not null,
 	level int default '0' not null,
+	owner_id char(36) default '00000000-0000-0000-0000-000000000000' not null,
+	shared tinyint(1) default '0' not null,
 	daily tinyint(1) default '1' not null,
 	`limit` int default '0' not null,
 	size int default '0' not null,
 	count int default '0' not null,
 	weights json,
 	rule tinyint(1) default '0' not null,
+	sweet tinyint(1) default '0' not null,
 	constraint le_play_id_uindex
 		unique (id)
 )
@@ -25,6 +28,14 @@ create table lotterydb.le_play
 
 create index le_play_name_active_index
 	on lotterydb.le_play (name, active)
+;
+
+create index le_play_owner_id_index
+	on lotterydb.le_play (owner_id)
+;
+
+create index le_play_shared_index
+	on lotterydb.le_play (shared)
 ;
 
 create table lotterydb.le_record
@@ -70,6 +81,8 @@ create table lotterydb.le_reward
 	active tinyint(1) default '1' not null,
 	`desc` varchar(256) default '' not null,
 	level int default '0' not null,
+	owner_id char(36) default '00000000-0000-0000-0000-000000000000' not null,
+	shared tinyint(1) default '0' not null,
 	award_id char(36) not null,
 	award_class int default '0' not null,
 	award_kind int default '0' not null,
@@ -90,6 +103,14 @@ create index le_reward_name_active_index
 
 create index le_reward_award_class_award_kind_index
 	on lotterydb.le_reward (award_class, award_kind)
+;
+
+create index le_reward_owner_id_index
+	on lotterydb.le_reward (owner_id)
+;
+
+create index le_reward_shared_index
+	on lotterydb.le_reward (shared)
 ;
 
 create table lotterydb.le_rule

@@ -27,6 +27,7 @@ class ModelTest extends TestCase
         if (!$list || !$list[Reward::ARG_SIZE]) {
             $reward = new Reward();
 
+            $reward->setOwner(Uuid::uuid());
             $reward->setAward(Uuid::uuid(), 1, 2);
             $reward->level = 1;
 
@@ -38,7 +39,7 @@ class ModelTest extends TestCase
 
             $reward->name = '这是名称name';
             $reward->desc = '这是描述desc';
-            $reward->size = 1000;
+            $reward->size = 5; // 奖品数量
 
             self::assertTrue($reward->post());
         } else {
@@ -82,8 +83,9 @@ class ModelTest extends TestCase
             $play->name = '这是名称name';
             $play->desc = '这是描述desc';
             $play->daily = true;
-            $play->limit = 3;
-            $play->size = $reward->size;
+            $play->limit = 3; // 活动限制
+            $play->size = 1000; // 活动次数
+            $play->sweet = true;
 
             $play->setReward(Reward::ID_NULL, 1);
             $play->setReward(Reward::ID_AGAIN, 2);
@@ -165,8 +167,9 @@ class ModelTest extends TestCase
         }
         if ($index) {
             var_dump(">>> play average time: ".((microtime(true) - $test_time) / $index)."s");
-            sleep(1);
+            sleep(1); // 等待写入完成
             self::assertEquals($count, $index);
+            self::assertEquals($count, $play->limit);
         }
 
         for ($i = 0; $i < $index; $i++) {

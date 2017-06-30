@@ -177,7 +177,7 @@ class Rule extends DbRule
      * @param string $play_id
      * @return array|null
      */
-    public static function weights(string $play_id)
+    private static function _weights(string $play_id)
     {
         $list = Rule::rules($play_id);
         if (empty($list)) {
@@ -191,5 +191,34 @@ class Rule extends DbRule
         }
 
         return $result;
+    }
+
+    /**
+     * @param Play|string $play
+     * @return array|null
+     */
+    public static function weights($play)
+    {
+        if (!$play) {
+            return null;
+        } elseif (is_string($play)) {
+            $play = Play::object($play);
+        } elseif (!$play instanceof Play) {
+            return null;
+        }
+
+        if ($play->hasRule() && empty($play->weights)) {
+            $play->weights = self::_weights($play->id);
+        }
+
+        if ($play->sweet) {
+            foreach ($play->weights as $reward_id => $weight) {
+                if (!Reward::object($reward_id, true)->passSync()) {
+                    $play->weights[$reward_id] = 0;
+                }
+            }
+        }
+
+        return $play->weights;
     }
 }

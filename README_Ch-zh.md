@@ -6,6 +6,7 @@
 [![Build Status](https://img.shields.io/travis/WindomZ/lottery-engine/master.svg?style=flat-square)](https://travis-ci.org/WindomZ/lottery-engine)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.0-8892BF.svg?style=flat-square)](https://php.net/)
 [![Minimum MYSQL Version](https://img.shields.io/badge/mysql-%3E%3D%205.6-4479a1.svg?style=flat-square)](https://www.mysql.com/)
+[![Platform](https://img.shields.io/badge/platform-Linux%2FmacOS-ff69b4.svg?style=flat-square)](#readme)
 
 [English](https://github.com/WindomZ/lottery-engine/blob/master/README.md#readme)
 
@@ -55,7 +56,7 @@ Lottery::setConfigPath('./config.yml');
 ## 局限
 
 > 因为没有内存缓存系统，如`Memcached`、`Redis`，而是通过`shmop`函数来共享内存操作，
-这带来了一些性能瓶颈，如有必要，可以重写`Cache`类来接入。
+这带来了一些性能瓶颈，如有必要，可以fork并重写`\LotteryEngine\Model\Cache`类来接入。
 
 ## 许可
 

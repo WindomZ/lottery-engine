@@ -8,7 +8,7 @@ use LotteryEngine\Exception\ErrorException;
  * Class Play
  * @package LotteryEngine\Database
  */
-class Play extends BaseTemplate2
+class Play extends BaseTemplate3
 {
     const COL_DAILY = 'daily';
     const COL_LIMIT = 'limit';
@@ -16,6 +16,7 @@ class Play extends BaseTemplate2
     const COL_COUNT = 'count';
     const COL_WEIGHTS = 'weights';
     const COL_RULE = 'rule';
+    const COL_SWEET = 'sweet';
 
     /**
      * @var bool
@@ -46,6 +47,11 @@ class Play extends BaseTemplate2
      * @var bool
      */
     public $rule = false;
+
+    /**
+     * @var bool
+     */
+    public $sweet = false;
 
     /**
      * Play constructor.
@@ -84,6 +90,7 @@ class Play extends BaseTemplate2
             self::COL_SIZE => $this->size,
             self::COL_COUNT => $this->count,
             self::COL_RULE => $this->hasRule(),
+            self::COL_SWEET => $this->sweet,
         ];
 
         if (self::DB()->getSupportJSON()) {
@@ -117,6 +124,7 @@ class Play extends BaseTemplate2
         } else {
             $this->rule = true;
         }
+        $this->sweet = boolval($data[self::COL_SWEET]);
 
         return $this;
     }

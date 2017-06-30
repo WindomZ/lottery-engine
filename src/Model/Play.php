@@ -6,7 +6,6 @@ use LotteryEngine\Database\Play as DbPlay;
 use LotteryEngine\Exception\ErrorException;
 use LotteryEngine\Util\Lock;
 use LotteryEngine\Util\Uuid;
-use SHMCache\Block;
 
 /**
  * Class Play
@@ -15,7 +14,7 @@ use SHMCache\Block;
 class Play extends DbPlay
 {
     /**
-     * @var Block
+     * @var Cache
      */
     private static $cache;
 
@@ -27,7 +26,7 @@ class Play extends DbPlay
         parent::__construct();
 
         if (!self::$cache) {
-            self::$cache = new Block(60);
+            self::$cache = new Cache(60);
         }
     }
 
@@ -179,9 +178,7 @@ class Play extends DbPlay
         $id = '';
 
         $sum = 0;
-        if ($this->hasRule() && empty($this->weights)) {
-            $this->weights = Rule::weights($this->id);
-        }
+        $this->weights = Rule::weights($this);
         foreach ($this->weights as $weight) {
             is_integer($weight) && $sum += $weight;
         }
@@ -204,7 +201,7 @@ class Play extends DbPlay
      * @param string $user_id
      * @return int
      */
-    public function playCount(string $user_id): int
+    protected function playCount(string $user_id): int
     {
         if ($this->limit > 0) {
             $count = $this->daily ? Record::totalQuery(
@@ -237,7 +234,7 @@ class Play extends DbPlay
      * @param string $user_id
      * @return int
      */
-    protected function hasCount(string $user_id): int
+    public function hasCount(string $user_id): int
     {
         $key = $this->id.'/'.$user_id;
         $count = self::$cache->get($key);
@@ -280,7 +277,7 @@ class Play extends DbPlay
 
         $id = $this->randomRewardId();
         if (empty($id)) {
-            throw new ErrorException('No reward!');
+            return Record::ID_FINISH;
         }
 
         $record = Record::create($user_id, $this->id, $id);
