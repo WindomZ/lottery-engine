@@ -10,7 +10,7 @@ use LotteryEngine\Exception\ErrorException;
  */
 abstract class BaseTemplate3 extends BaseTemplate2
 {
-    const ID_ALL = '00000000-0000-0000-0000-000000000000';
+    const ID_OWNER_ALL = '00000000-0000-0000-0000-000000000000';
 
     const COL_OWNER_ID = 'owner_id';
     const COL_SHARED = 'shared';
@@ -18,12 +18,12 @@ abstract class BaseTemplate3 extends BaseTemplate2
     /**
      * @var string
      */
-    public $owner_id = self::ID_ALL;
+    public $owner_id = self::ID_OWNER_ALL;
 
     /**
      * @var bool
      */
-    public $shared = false;
+    public $shared = true;
 
     /**
      * @return array
@@ -58,6 +58,8 @@ abstract class BaseTemplate3 extends BaseTemplate2
      */
     protected function beforePost()
     {
+        $this->shared = $this->shared || $this->owner_id === self::ID_OWNER_ALL;
+
         parent::beforePost();
     }
 
@@ -76,6 +78,6 @@ abstract class BaseTemplate3 extends BaseTemplate2
     public function setOwner(string $owner_id, bool $shared = false)
     {
         $this->owner_id = $owner_id;
-        $this->shared = $shared;
+        $this->shared = $shared || $owner_id === self::ID_OWNER_ALL;
     }
 }
