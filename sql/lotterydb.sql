@@ -30,6 +30,14 @@ create index le_play_name_active_index
 	on lotterydb.le_play (name, active)
 ;
 
+create index le_play_owner_id_index
+	on lotterydb.le_play (owner_id)
+;
+
+create index le_play_shared_index
+	on lotterydb.le_play (shared)
+;
+
 create table lotterydb.le_record
 (
 	id char(36) not null
@@ -95,6 +103,14 @@ create index le_reward_name_active_index
 
 create index le_reward_award_class_award_kind_index
 	on lotterydb.le_reward (award_class, award_kind)
+;
+
+create index le_reward_owner_id_index
+	on lotterydb.le_reward (owner_id)
+;
+
+create index le_reward_shared_index
+	on lotterydb.le_reward (shared)
 ;
 
 create table lotterydb.le_rule
