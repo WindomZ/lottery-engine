@@ -4,7 +4,6 @@ namespace LotteryEngine\Model;
 
 use LotteryEngine\Database\Reward as DbReward;
 use LotteryEngine\Exception\ErrorException;
-use SHMCache\Block;
 
 /**
  * Class Reward
@@ -16,7 +15,7 @@ class Reward extends DbReward
     const ID_AGAIN = '00000000-0000-0000-0000-000000000002';
 
     /**
-     * @var Block
+     * @var Cache
      */
     private static $cache;
 
@@ -40,7 +39,7 @@ class Reward extends DbReward
         parent::__construct();
 
         if (!self::$cache) {
-            self::$cache = new Block(3600);
+            self::$cache = new Cache(3600);
         }
     }
 

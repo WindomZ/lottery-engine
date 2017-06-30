@@ -6,7 +6,6 @@ use LotteryEngine\Database\Play as DbPlay;
 use LotteryEngine\Exception\ErrorException;
 use LotteryEngine\Util\Lock;
 use LotteryEngine\Util\Uuid;
-use SHMCache\Block;
 
 /**
  * Class Play
@@ -15,7 +14,7 @@ use SHMCache\Block;
 class Play extends DbPlay
 {
     /**
-     * @var Block
+     * @var Cache
      */
     private static $cache;
 
@@ -27,7 +26,7 @@ class Play extends DbPlay
         parent::__construct();
 
         if (!self::$cache) {
-            self::$cache = new Block(60);
+            self::$cache = new Cache(60);
         }
     }
 
