@@ -63,6 +63,8 @@ Lottery::setConfigPath('./config.yml');
 |bool|active|N|Y|是否生效|
 |string|level|N|Y|级别|
 |string|desc|N|Y|描述|
+|string|owner_id|N|Y|拥有者UUID|
+|bool|shared|N|Y|开启持有共享|
 |string|award_id|N|Y|指定奖品UUID|
 |string|award_class|N|Y|指定奖品类别(第一级分类，单选，可选)|
 |string|award_kind|N|Y|指定奖品类型(第二级分类，多选，可选)|
@@ -80,12 +82,15 @@ Lottery::setConfigPath('./config.yml');
 |bool|active|N|Y|是否生效|
 |string|level|N|Y|级别|
 |string|desc|N|Y|描述|
+|string|owner_id|N|Y|拥有者UUID|
+|bool|shared|N|Y|开启持有共享，默认为true|
 |bool|daily|Y|Y|每日活动|
 |int|limit|Y|Y|用户次数限制(每日活动或总次数)|
 |int|size|Y|Y|参与活动总数|
 |int|count|N|N|参与活动次数|
 |json|weights|Y|Y|奖品权重(若不支持json则开启'rule')|
-|bool|rule|N|N|是否开启玩法规则(`Rule`)|
+|bool|rule|N|N|是否开启玩法规则(`Rule`)，默认为false|
+|bool|sweet|N|Y|不会出现奖品轮空现象，默认为false|
 
 #### 玩法规则(`Rule`)
 
@@ -151,6 +156,9 @@ Lottery::setConfigPath('./config.yml');
     - int $award_kind 指定奖品的类型
   - @note 最后记得调用`post`或`put`来提交修改
 
+- Reward::ID_OWNER_ALL
+  - @description 默认的拥有者UUID - 开启持有共享'shared'
+
 - Reward::ID_NULL
   - @description 默认的奖品UUID - 未获奖
 
@@ -203,6 +211,9 @@ Lottery::setConfigPath('./config.yml');
     - string $user_id 用户UUID
     - callable $callback($err, Record $record) 回调系统确认的记录(`Record`)
   - @return string 记录UUID，系统未确认，便于后续的追踪
+
+- Play::ID_OWNER_ALL
+  - @description 默认的拥有者UUID - 开启持有共享'shared'
 
 #### 记录(`Record`)
 
