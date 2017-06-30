@@ -8,7 +8,7 @@ use LotteryEngine\Exception\ErrorException;
  * Class Reward
  * @package LotteryEngine\Database
  */
-class Reward extends BaseTemplate3
+class Reward extends BaseTemplate2
 {
     const COL_AWARD_ID = 'award_id';
     const COL_AWARD_CLASS = 'award_class';

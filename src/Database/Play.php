@@ -8,7 +8,7 @@ use LotteryEngine\Exception\ErrorException;
  * Class Play
  * @package LotteryEngine\Database
  */
-class Play extends BaseTemplate3
+class Play extends BaseTemplate2
 {
     const COL_DAILY = 'daily';
     const COL_LIMIT = 'limit';

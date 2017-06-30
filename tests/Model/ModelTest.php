@@ -27,7 +27,6 @@ class ModelTest extends TestCase
         if (!$list || !$list[Reward::ARG_SIZE]) {
             $reward = new Reward();
 
-            $reward->setOwner(Uuid::uuid());
             $reward->setAward(Uuid::uuid(), 1, 2);
             $reward->level = 1;
 
