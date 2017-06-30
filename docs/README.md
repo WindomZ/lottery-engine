@@ -191,7 +191,7 @@ Lottery::setConfigPath('./config.yml');
     - int $weight 权重，数值越大概率越大
   - @note 最后记得调用`post`或`put`来提交修改
 
-- Play->playCount($user_id)
+- Play->hasCount($user_id)
   - @description 剩余抽奖玩法(`Play`)次数
   - @param
     - string $user_id 用户UUID
