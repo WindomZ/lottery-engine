@@ -55,7 +55,7 @@ Lottery::setConfigPath('./config.yml');
 ## 局限
 
 > 因为没有内存缓存系统，如`Memcached`、`Redis`，而是通过`shmop`函数来共享内存操作，
-这带来了一些性能瓶颈，如有必要，可以重写`Cache`类来接入。
+这带来了一些性能瓶颈，如有必要，可以fork并重写`\LotteryEngine\Model\Cache`类来接入。
 
 ## 许可
 

@@ -55,7 +55,7 @@ Refer to the [Document](https://windomz.github.io/lottery-engine)(_Currently onl
 ## Limitation
 
 > There is no memory cache system, such as `Memcached`, `Redis`, but through `shmop` functions to share memory operations, 
-this brings some performance bottlenecks, if necessary, can be rewritten `Cache` class to access.
+this brings some performance bottlenecks, if necessary, can fork and rewrite `\LotteryEngine\Model\Cache` class to access.
 
 ## License
 
