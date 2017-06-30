@@ -35,6 +35,7 @@ database_password: root
 database_charset: utf8
 database_logging: false
 database_json: true # If the database supports JSON.
+php_enable_shmop: true # If the PHP environment enabled shmop support.
 ```
 
 If only for quick testing, 
@@ -60,4 +61,4 @@ this brings some performance bottlenecks, if necessary, can fork and rewrite `\L
 
 ## License
 
-The [MIT License](https://github.com/WindomZ/lottery-engine/blob/master/LICENSE)
+[MIT](https://github.com/WindomZ/lottery-engine/blob/master/LICENSE)

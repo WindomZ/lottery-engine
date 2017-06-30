@@ -35,6 +35,7 @@ database_password: root
 database_charset: utf8
 database_logging: false
 database_json: true # 是否支持json字段
+php_enable_shmop: true # 是否PHP环境支持shmop.
 ```
 
 如果仅用于快速测试，
@@ -60,4 +61,4 @@ Lottery::setConfigPath('./config.yml');
 
 ## 许可
 
-The [MIT License](https://github.com/WindomZ/lottery-engine/blob/master/LICENSE)
+[MIT](https://github.com/WindomZ/lottery-engine/blob/master/LICENSE)
