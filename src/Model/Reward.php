@@ -40,6 +40,9 @@ class Reward extends DbReward
 
         if (!self::$cache) {
             self::$cache = new Cache(3600);
+            if (!self::Config()->getSupportSHMOP()) {
+                self::$cache->close();
+            }
         }
     }
 
@@ -178,8 +181,6 @@ class Reward extends DbReward
                 'size' => $this->size,
             );
             self::$cache->save($this->id, $data);
-
-            return true;
         }
 
         return boolval($data['active']) && intval($data['count']) < intval($data['size']);

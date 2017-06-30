@@ -27,6 +27,9 @@ class Play extends DbPlay
 
         if (!self::$cache) {
             self::$cache = new Cache(60);
+            if (!self::Config()->getSupportSHMOP()) {
+                self::$cache->close();
+            }
         }
     }
 
