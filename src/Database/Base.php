@@ -2,6 +2,7 @@
 
 namespace LotteryEngine\Database;
 
+use LotteryEngine\Config\Config;
 use LotteryEngine\Lottery;
 
 /**
@@ -15,6 +16,14 @@ abstract class Base
      */
     protected function __construct()
     {
+    }
+
+    /**
+     * @return Config
+     */
+    protected static function Config()
+    {
+        return Lottery::getInstance()->getConfig();
     }
 
     /**

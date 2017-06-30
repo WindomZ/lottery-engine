@@ -6,3 +6,4 @@ database_username: root
 database_password: root
 database_logging: true
 database_json: false
+php_enable_shmop: true

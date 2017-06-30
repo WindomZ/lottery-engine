@@ -11,6 +11,14 @@ use PDO;
 class Config extends \Noodlehaus\Config
 {
     /**
+     * @return bool
+     */
+    public function getSupportSHMOP()
+    {
+        return $this->get('php_enable_shmop');
+    }
+
+    /**
      * @return array
      */
     protected function getDefaults()
@@ -32,6 +40,7 @@ class Config extends \Noodlehaus\Config
                 'SET SQL_MODE=ANSI_QUOTES',
             ],
             'database_json' => true,
+            'php_enable_shmop' => true,
         ];
     }
 }
