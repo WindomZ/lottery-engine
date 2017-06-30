@@ -20,6 +20,7 @@ create table lotterydb.le_play
 	count int default '0' not null,
 	weights json,
 	rule tinyint(1) default '0' not null,
+	sweet tinyint(1) default '0' not null,
 	constraint le_play_id_uindex
 		unique (id)
 )
