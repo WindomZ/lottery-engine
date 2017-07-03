@@ -114,7 +114,8 @@ class Rule extends DbRule
                 if ($obj instanceof Rule && $obj->reward_id === $rid) {
                     if ($obj->weight !== intval($rw)) {
                         $obj->weight = $rw;
-                        if (!$obj->put([Rule::COL_WEIGHT])) {
+                        $obj->active = $rw > 0;
+                        if (!$obj->put([Rule::COL_WEIGHT, Rule::COL_ACTIVE])) {
                             throw new ErrorException('Fail to put play rule!');
                         }
                     }
@@ -140,7 +141,8 @@ class Rule extends DbRule
             if ($delete) {
                 $play->weights[$obj->reward_id] = 0;
                 $obj->weight = 0;
-                if (!$obj->put([Rule::COL_WEIGHT])) {
+                $obj->active = false;
+                if (!$obj->put([Rule::COL_WEIGHT, Rule::COL_ACTIVE])) {
                     throw new ErrorException('Fail to put play rule!');
                 }
             }
