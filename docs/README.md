@@ -212,6 +212,10 @@ Lottery::setConfigPath('./config.yml');
     - callable $callback($err, Record $record) 回调系统确认的记录(`Record`)
   - @return string 记录UUID，系统未确认，便于后续的追踪
 
+- Play->disable()
+  - @description 取消抽奖玩法(`Play`)
+  - @return bool
+
 - Play::ID_OWNER_ALL
   - @description 默认的拥有者UUID - 开启持有共享'shared'
 
