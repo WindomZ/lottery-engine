@@ -326,4 +326,15 @@ class Play extends DbPlay
 
         return $record->id;
     }
+
+    /**
+     * @return bool
+     * @throws ErrorException
+     */
+    public function disable(): bool
+    {
+        $this->active = false;
+
+        return $this->put([self::COL_ACTIVE]);
+    }
 }
